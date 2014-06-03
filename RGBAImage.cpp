@@ -26,6 +26,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <cstring>
 #include <cassert>
 
+#define LODEPNG_BITMAP std::vector<unsigned char>
 
 struct LodePNGDeleter
 {
@@ -39,13 +40,14 @@ struct LodePNGDeleter
 };
 
 
-static std::shared_ptr<LODEPNG_BITMAP> ToLodePNG(const RGBAImage &image)
+std::shared_ptr<LODEPNG_BITMAP> ToLodePNG(const RGBAImage &image)
 {
-    const *data = image.Get_Data();
+    std::shared_ptr<LODEPNG_BITMAP> bitmap;
+/*    const *data = image.Get_Data();
 
     std::shared_ptr<LODEPNG_BITMAP> bitmap(
         LodePNG_Allocate(image.Get_Width(), image.Get_Height(), 32,
-                           0x000000ff, 0x0000ff00, 0x00ff0000),
+                             0x000000ff, 0x0000ff00, 0x00ff0000),
         LodePNGDeleter());
     assert(bitmap.get());
 
@@ -56,13 +58,12 @@ static std::shared_ptr<LODEPNG_BITMAP> ToLodePNG(const RGBAImage &image)
             LodePNG_GetScanLine(bitmap.get(), image.Get_Height() - y - 1));
         memcpy(scanline, data, sizeof(data[0]) * image.Get_Width());
     }
-
+*/
     return bitmap;
 }
 
 
-static std::shared_ptr<RGBAImage> ToRGBAImage(LODEPNG_BITMAP *image,
-                                              const std::string &filename = "")
+std::shared_ptr<RGBAImage> ToRGBAImage(LODEPNG_BITMAP *image, std::string filename = "")
 {
     const w = LodePNG_GetWidth(image);
     const h = LodePNG_GetHeight(image);
@@ -82,10 +83,9 @@ static std::shared_ptr<RGBAImage> ToRGBAImage(LODEPNG_BITMAP *image,
 
 }
 
-std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w,
-                                                 unsigned int h) const
+std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w, unsigned int h)
 {
-    if (w == 0)
+/*    if (w == 0)
     {
         w = Width / 2;
     }
@@ -112,12 +112,13 @@ std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w,
 
     img = ToRGBAImage(converted.get(), Name);
 
+*/
     return img;
 }
 
-void RGBAImage::WriteToFile(const std::string &filename) const
+void RGBAImage::WriteToFile(std::string filename) const
 {
-    const file_type = LodePNG_GetFIFFromFilename(filename.c_str());
+/*    const file_type = LodePNG_GetFIFFromFilename(filename.c_str());
     if (FIF_UNKNOWN == file_type)
     {
         throw RGBImageException("Can't save to unknown filetype '" +
@@ -135,25 +136,23 @@ void RGBAImage::WriteToFile(const std::string &filename) const
     if (not result)
     {
         throw RGBImageException("Failed to save to '" + filename + "'");
-    }
+    }*/
 }
 
-std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(const std::string &filename)
+std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(std::string filename)
 {
-    LODEPNG_BITMAP *lodepng_image = nullptr;
-    if (temporary = LodePNG_Load(file_type, filename.c_str(), 0))
-    {
-        lodepng_image = LodePNG_ConvertTo32Bits(temporary);
-        LodePNG_Unload(temporary);
-    }
-    if (not lodepng_image)
-    {
+    LODEPNG_BITMAP lodepng_image; //the raw pixels
+    unsigned width, height;
+    unsigned error = lodepng::decode(lodepng_image, width, height, filename.c_str());
+    if (error) {
+        std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
         throw RGBImageException("Failed to load the image " + filename);
     }
 
-    result = ToRGBAImage(lodepng_image);
+    //the pixels are now in the vector "image", 4 bytes per pixel, 
+    //ordered RGBARGBA..., use it as texture, draw it, ...
 
-    LodePNG_Unload(lodepng_image);
+    RGBAImage result = ToRGBAImage(lodepng_image);
 
     return result;
 }
