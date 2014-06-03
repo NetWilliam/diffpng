@@ -65,7 +65,7 @@ void LPyramid::Convolve(std::vector<float> &a,
     assert(b.size() > 1);
 
     const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
-#pragma omp parallel for
+//#pragma omp parallel for
     for (auto y = 0u; y < Height; y++)
     {
         for (auto x = 0u; x < Width; x++)

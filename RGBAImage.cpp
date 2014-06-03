@@ -2,8 +2,8 @@
 RGBAImage.cpp
 Copyright (C) 2006-2011 Yangli Hector Yee
 Copyright (C) 2011-2014 Steven Myint
-
 (This entire file was rewritten by Jim Tilander)
+Copyright (C) 2014 Don Bright
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -20,40 +20,40 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
 #include "RGBAImage.h"
-#include "FreeImage.h"
+#include "lodepng.h"
 
 #include <string>
 #include <cstring>
 #include <cassert>
 
 
-struct FreeImageDeleter
+struct LodePNGDeleter
 {
-    void operator()(FIBITMAP *image)
+    void operator()(LODEPNG_BITMAP *image)
     {
         if (image)
         {
-            FreeImage_Unload(image);
+            LodePNG_Unload(image);
         }
     }
 };
 
 
-static std::shared_ptr<FIBITMAP> ToFreeImage(const RGBAImage &image)
+static std::shared_ptr<LODEPNG_BITMAP> ToLodePNG(const RGBAImage &image)
 {
-    const auto *data = image.Get_Data();
+    const *data = image.Get_Data();
 
-    std::shared_ptr<FIBITMAP> bitmap(
-        FreeImage_Allocate(image.Get_Width(), image.Get_Height(), 32,
+    std::shared_ptr<LODEPNG_BITMAP> bitmap(
+        LodePNG_Allocate(image.Get_Width(), image.Get_Height(), 32,
                            0x000000ff, 0x0000ff00, 0x00ff0000),
-        FreeImageDeleter());
+        LodePNGDeleter());
     assert(bitmap.get());
 
-    for (auto y = 0u; y < image.Get_Height();
+    for (y = 0u; y < image.Get_Height();
          y++, data += image.Get_Width())
     {
-        auto scanline = reinterpret_cast<unsigned int *>(
-            FreeImage_GetScanLine(bitmap.get(), image.Get_Height() - y - 1));
+        scanline = reinterpret_cast<unsigned int *>(
+            LodePNG_GetScanLine(bitmap.get(), image.Get_Height() - y - 1));
         memcpy(scanline, data, sizeof(data[0]) * image.Get_Width());
     }
 
@@ -61,20 +61,20 @@ static std::shared_ptr<FIBITMAP> ToFreeImage(const RGBAImage &image)
 }
 
 
-static std::shared_ptr<RGBAImage> ToRGBAImage(FIBITMAP *image,
+static std::shared_ptr<RGBAImage> ToRGBAImage(LODEPNG_BITMAP *image,
                                               const std::string &filename = "")
 {
-    const auto w = FreeImage_GetWidth(image);
-    const auto h = FreeImage_GetHeight(image);
+    const w = LodePNG_GetWidth(image);
+    const h = LodePNG_GetHeight(image);
 
-    auto result = std::make_shared<RGBAImage>(w, h, filename);
-    // Copy the image over to our internal format, FreeImage has the scanlines
+    result = std::make_shared<RGBAImage>(w, h, filename);
+    // Copy the image over to our internal format, LodePNG has the scanlines
     // bottom to top though.
-    auto dest = result->Get_Data();
+    dest = result->Get_Data();
     for (unsigned int y = 0; y < h; y++, dest += w)
     {
-        const auto scanline = reinterpret_cast<const unsigned int *>(
-            FreeImage_GetScanLine(image, h - y - 1));
+        const scanline = reinterpret_cast<const unsigned int *>(
+            LodePNG_GetScanLine(image, h - y - 1));
         memcpy(dest, scanline, sizeof(dest[0]) * w);
     }
 
@@ -106,32 +106,32 @@ std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w,
     assert(w <= Width);
     assert(h <= Height);
 
-    auto bitmap = ToFreeImage(*this);
-    std::unique_ptr<FIBITMAP, FreeImageDeleter> converted(
-        FreeImage_Rescale(bitmap.get(), w, h, FILTER_BICUBIC));
+    bitmap = ToLodePNG(*this);
+    std::unique_ptr<LODEPNG_BITMAP, LodePNGDeleter> converted(
+        LodePNG_Rescale(bitmap.get(), w, h, FILTER_BICUBIC));
 
-    auto img = ToRGBAImage(converted.get(), Name);
+    img = ToRGBAImage(converted.get(), Name);
 
     return img;
 }
 
 void RGBAImage::WriteToFile(const std::string &filename) const
 {
-    const auto file_type = FreeImage_GetFIFFromFilename(filename.c_str());
+    const file_type = LodePNG_GetFIFFromFilename(filename.c_str());
     if (FIF_UNKNOWN == file_type)
     {
         throw RGBImageException("Can't save to unknown filetype '" +
                                 filename + "'");
     }
 
-    auto bitmap = ToFreeImage(*this);
+    bitmap = ToLodePNG(*this);
 
-    FreeImage_SetTransparent(bitmap.get(), false);
-    std::unique_ptr<FIBITMAP, FreeImageDeleter> converted(
-        FreeImage_ConvertTo24Bits(bitmap.get()));
+    LodePNG_SetTransparent(bitmap.get(), false);
+    std::unique_ptr<LODEPNG_BITMAP, LodePNGDeleter> converted(
+        LodePNG_ConvertTo24Bits(bitmap.get()));
 
     const bool result =
-        !!FreeImage_Save(file_type, converted.get(), filename.c_str());
+        !!LodePNG_Save(file_type, converted.get(), filename.c_str());
     if (not result)
     {
         throw RGBImageException("Failed to save to '" + filename + "'");
@@ -140,26 +140,20 @@ void RGBAImage::WriteToFile(const std::string &filename) const
 
 std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(const std::string &filename)
 {
-    const auto file_type = FreeImage_GetFileType(filename.c_str());
-    if (FIF_UNKNOWN == file_type)
+    LODEPNG_BITMAP *lodepng_image = nullptr;
+    if (temporary = LodePNG_Load(file_type, filename.c_str(), 0))
     {
-        throw RGBImageException("Unknown filetype '" + filename + "'");
+        lodepng_image = LodePNG_ConvertTo32Bits(temporary);
+        LodePNG_Unload(temporary);
     }
-
-    FIBITMAP *free_image = nullptr;
-    if (auto temporary = FreeImage_Load(file_type, filename.c_str(), 0))
-    {
-        free_image = FreeImage_ConvertTo32Bits(temporary);
-        FreeImage_Unload(temporary);
-    }
-    if (not free_image)
+    if (not lodepng_image)
     {
         throw RGBImageException("Failed to load the image " + filename);
     }
 
-    auto result = ToRGBAImage(free_image);
+    result = ToRGBAImage(lodepng_image);
 
-    FreeImage_Unload(free_image);
+    LodePNG_Unload(lodepng_image);
 
     return result;
 }
