@@ -40,10 +40,10 @@ file LICENSE
     --luminance l : The luminance of the display the observer is seeing.
                     Default is 100 candela per meter squared
     --colorfactor : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.
-    --downsample : How many powers of two to down sample the image.
     --scale : Scale images to match each other's dimensions.
     --sum-errors : Print a sum of the luminance and color differences.
-    --output foo.ppm : Saves the difference image to foo.ppm
+    --maxlevels n : Set the maximum number of Laplacian Pyramids to use.
+    --output foo.png : Save a diff image, black=different, red=same. 
 
 ###design philosophy
 
