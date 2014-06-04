@@ -1,6 +1,8 @@
 #diffpng
 
-Compare two .png image files
+Compare two .png image files based on Hector Yee's PerceptualDiff algorithm
+
+"Perceptual Metric for Production Testing", 2004/1/1, Journal of Graphics Tools
 
 ###license
 
@@ -43,6 +45,7 @@ file LICENSE
     --scale : Scale images to match each other's dimensions.
     --sum-errors : Print a sum of the luminance and color differences.
     --maxlevels n : Set the maximum number of Laplacian Pyramids to use.
+      (less is faster)
     --output foo.png : Save a diff image, black=different, red=same. 
 
 ###design philosophy
@@ -52,5 +55,4 @@ file LICENSE
 3. no dependencies
 4. small
 5. regression tests
-
 
