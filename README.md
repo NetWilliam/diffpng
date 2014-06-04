@@ -8,7 +8,9 @@ License
 =======
 
 Copyright (C) 2006-2011 Yangli Hector Yee (PerceptualDiff)
+
 Copyright (C) 2011-2014 Steven Myint (PerceptualDiff)
+
 Copyright (C) 2014 Don Bright
 
 This program is free software; you can redistribute it and/or modify it under
@@ -24,20 +26,19 @@ file LICENSE
 Build Instructions
 ==================
 
-#. Get Cmake (http://www.cmake.org)
-#. Run Cmake and make
+Get Cmake (http://www.cmake.org)
+
+Build
 
     cmake . && make
 
-#. To specify the install directory, use::
+Install
 
     make install DESTDIR="/home/me/mydist"
 
 
 Usage
 =====
-
-Command line::
 
     diffpng image1.png image2.png [options]
     --verbose : Turns on verbose mode
