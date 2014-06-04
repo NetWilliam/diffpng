@@ -1,5 +1,4 @@
-diffpng
-=======
+#diffpng
 
 Compare two .png image files
 
