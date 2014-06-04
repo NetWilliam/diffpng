@@ -65,7 +65,9 @@ file LICENSE
 
 ###credits
 
+For the original PerceptualDiff:
+
 * Hector Yee, author of original PerceptualDiff. http://hectorgon.blogspot.com
-* Steven Myint, major fork. https://github.com/myint/perceptualdiff
-** Scott Corley, Tobias Sauerwein, Cairo Team, Jim Tilander, Jeff Terrace
+* Steven Myint, major fork. https://github.com/myint/perceptualdiff 
+* Contributors Scott Corley, Tobias Sauerwein, Cairo Team, Jim Tilander, Jeff Terrace
 
