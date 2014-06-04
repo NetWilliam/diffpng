@@ -56,9 +56,7 @@ file LICENSE
 4. small
 5. regression tests
 
-###
-
-todo
+###todo
 
 * make all .hpp header files
 * figure out why --luminanceonly works for the openscad tests (color v color2 esp)
@@ -67,12 +65,12 @@ todo
 
 ###credits
 
-( from Steven Myint's fork of PerceptualDiff https://github.com/myint/perceptualdiff )
-*Hector Yee, project administrator and originator - hectorgon.blogspot.com.
-*Scott Corley, for png file IO code.
-*Tobias Sauerwein, for make install, package_source Cmake configuration.
-*Cairo Team, for bugfixes.
-*Jim Tilander, rewrote the IO to use FreeImage.
-*Steven Myint, for OpenMP support and bug fixes.
-*Jeff Terrace, for better FreeImage support and new command-line options.
+* ( from Steven Myint's fork of PerceptualDiff https://github.com/myint/perceptualdiff )
+* Hector Yee, project administrator and originator - hectorgon.blogspot.com.
+* Scott Corley, for png file IO code.
+* Tobias Sauerwein, for make install, package_source Cmake configuration.
+* Cairo Team, for bugfixes.
+* Jim Tilander, rewrote the IO to use FreeImage.
+* Steven Myint, for OpenMP support and bug fixes.
+* Jeff Terrace, for better FreeImage support and new command-line options.
 
