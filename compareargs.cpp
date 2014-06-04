@@ -17,8 +17,8 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include "CompareArgs.h"
-#include "RGBAImage.h"
+#include "compareargs.h"
+#include "rgbaimage.h"
 
 #include <cstdlib>
 #include <cassert>
@@ -28,14 +28,15 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 static const auto copyright =
-    "PerceptualDiff version 1.2, Copyright (C) 2006 Yangli Hector Yee\n\
-PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
+    "diffpng version 2014,\n\
+based on PerceptualDiff Copyright (C) 2006 Yangli Hector Yee\n\
+diffpng and PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
 See the GPL page for details: http://www.gnu.org/copyleft/gpl.html\n\n";
 
 
-static const auto usage = "Usage: peceptualdiff image1 image2\n\
+static const auto usage = "Usage: diffpng image1 image2\n\
 \n\
 Compares image1 and image2 using a perceptually based image metric.\n\
 \n\
@@ -51,9 +52,7 @@ Options:\n\
     --scale         : Scale images to match each other's dimensions.\n\
     --sum-errors    : Print a sum of the luminance and color differences.\n\
     --output o.ppm  : Write difference to the file o.ppm\n\
-\n\
-Note: Input or Output files can also be in the PNG or JPG format or any format\n\
-that FreeImage supports.\n";
+\n";
 
 
 template <typename T>

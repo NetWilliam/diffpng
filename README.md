@@ -1,11 +1,14 @@
-==============
-perceptualdiff
-==============
+=======
+diffpng
+=======
 
-A program that compares two images using a perceptually based image metric.
+Compare two .png image files
 
-Copyright (C) 2006-2011 Yangli Hector Yee
-Copyright (C) 2011-2014 Steven Myint
+License
+=======
+
+Copyright (C) 2006-2011 Yangli Hector Yee (PerceptualDiff)
+Copyright (C) 2011-2014 Steven Myint (PerceptualDiff)
 Copyright (C) 2014 Don Bright
 
 This program is free software; you can redistribute it and/or modify it under
@@ -16,8 +19,7 @@ version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details in the
-file gpl.txt.
-
+file LICENSE
 
 Build Instructions
 ==================
@@ -37,7 +39,7 @@ Usage
 
 Command line::
 
-    perceptualdiff image1.png image2.png [options]
+    diffpng image1.png image2.png [options]
     --verbose : Turns on verbose mode
     --fov deg : Field of view, deg, in degrees. Usually between 10.0 to 85.0.
                 This controls how much of the screen the observer is seeing.
@@ -54,4 +56,14 @@ Command line::
     --scale : Scale images to match each other's dimensions.
     --sum-errors : Print a sum of the luminance and color differences.
     --output foo.ppm : Saves the difference image to foo.ppm
+
+Design philosophy
+=================
+
+1. simple
+2. portable
+3. no dependencies
+4. small
+5. regression tests
+
 
