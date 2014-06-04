@@ -69,5 +69,5 @@ For the original PerceptualDiff:
 
 * Hector Yee, author of original PerceptualDiff. http://hectorgon.blogspot.com
 * Steven Myint, major fork. https://github.com/myint/perceptualdiff 
-* Contributors Scott Corley, Tobias Sauerwein, Cairo Team, Jim Tilander, Jeff Terrace
+* PerceptualDiff contributors: Scott Corley, Tobias Sauerwein, Cairo Team, Jim Tilander, Jeff Terrace
 
