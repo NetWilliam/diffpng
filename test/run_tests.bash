@@ -10,9 +10,9 @@
 # Edit the following lines to add additional tests.
 all_tests () {
 cat <<EOF
-FAIL Bug1102605_ref.tif Bug1102605.tif
-PASS Bug1471457_ref.tif Bug1471457.tif
-PASS cam_mb_ref.tif cam_mb.tif
+FAIL Bug1102605_ref.png Bug1102605.png
+PASS Bug1471457_ref.png Bug1471457.png
+PASS cam_mb_ref.png cam_mb.png
 FAIL fish2.png fish1.png
 PASS square.png square_scaled.png
 FAIL Aqsis_vase.png Aqsis_vase_ref.png
@@ -80,13 +80,13 @@ $pdiff fish[12].png --output foo 2>&1 | grep -q 'unknown filetype'
 $pdiff --verbose fish1.png 2>&1 | grep -q 'Not enough'
 $pdiff --downsample -3 fish1.png Aqsis_vase.png 2>&1 | grep -q 'Invalid'
 $pdiff --threshold -3 fish1.png Aqsis_vase.png 2>&1 | grep -q 'Invalid'
-$pdiff cam_mb_ref.tif cam_mb.tif --fake-option
+$pdiff cam_mb_ref.png cam_mb.png --fake-option
 $pdiff --verbose --scale fish1.png Aqsis_vase.png 2>&1 | grep -q 'FAIL'
 $pdiff --downsample 2 fish1.png Aqsis_vase.png 2>&1 | grep -q 'FAIL'
 $pdiff  /dev/null /dev/null 2>&1 | grep -q 'Unknown filetype'
 $pdiff --verbose --sum-errors fish[12].png 2>&1 | grep -q 'sum'
-$pdiff --colorfactor .5 -threshold 1000 --gamma 3 --luminance 90 cam_mb_ref.tif cam_mb.tif
-$pdiff --verbose -downsample 30 -scale --luminanceonly --fov 80 cam_mb_ref.tif cam_mb.tif
+$pdiff --colorfactor .5 -threshold 1000 --gamma 3 --luminance 90 cam_mb_ref.png cam_mb.png
+$pdiff --verbose -downsample 30 -scale --luminanceonly --fov 80 cam_mb_ref.png cam_mb.png
 $pdiff --fov wrong fish1.png fish1.png 2>&1 | grep -q 'Invalid argument'
 
 echo -e '\x1b[01;32mOK\x1b[0m'
