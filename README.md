@@ -65,9 +65,17 @@ file LICENSE
 
 ###credits
 
-For the original PerceptualDiff:
+For the original PerceptualDiff (PDiff):
 
 * Hector Yee, author of original PerceptualDiff. http://hectorgon.blogspot.com
 * Steven Myint, major fork. https://github.com/myint/perceptualdiff 
 * PerceptualDiff contributors: Scott Corley, Tobias Sauerwein, Cairo Team, Jim Tilander, Jeff Terrace
+* PDiff's Threshold vs Intensity function, Ward Larson Siggraph 1997
+* PDiff's Contrast sensitivity function, Barten SPIE 1989
+* PDiff's Visual Masking Function, Daly 1993
+* PDiff's Adobe(TM) RGB->XYZ matrix from http://www.brucelindbloom.com/
+* PDiff's ABGR format, http://partners.adobe.com/asn/developer/PDFS/TN/TIFF6.pdf
 
+For diffpng:
+
+* Lode Vandevenne's lodepng. http://lodev.org/lodepng/

@@ -55,8 +55,6 @@ public:
 	// 1.0 means full strength.
 	float ColorFactor;
 
-	// How much to down sample image before comparing, in powers of 2.
-	unsigned int DownSample;
 	unsigned int MaxPyramidLevels;
 };
 

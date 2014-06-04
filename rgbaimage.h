@@ -2,7 +2,6 @@
 RGBAImage.h
 Copyright (C) 2006-2011 Yangli Hector Yee
 Copyright (C) 2011-2014 Steven Myint
-Copyright (C) 2014 Don Bright
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -37,82 +36,77 @@ Place, Suite 330, Boston, MA 02111-1307 USA
  */
 class RGBAImage
 {
-    RGBAImage(const RGBAImage &);
-    RGBAImage &operator=(const RGBAImage &);
+	RGBAImage(const RGBAImage &);
+	RGBAImage &operator=(const RGBAImage &);
 
 public:
-    RGBAImage(unsigned int w, unsigned int h, const std::string &name="")
-        : Width(w), Height(h), Name(name), Data(w * h)
-    {
-    }
-    unsigned char Get_Red(unsigned int i) const
-    {
-        return (Data[i] & 0xFF);
-    }
-    unsigned char Get_Green(unsigned int i) const
-    {
-        return ((Data[i] >> 8) & 0xFF);
-    }
-    unsigned char Get_Blue(unsigned int i) const
-    {
-        return ((Data[i] >> 16) & 0xFF);
-    }
-    unsigned char Get_Alpha(unsigned int i) const
-    {
-        return ((Data[i] >> 24) & 0xFF);
-    }
-    void Set(unsigned char r, unsigned char g, unsigned char b,
-             unsigned char a, unsigned int i)
-    {
-        Data[i] = r | (g << 8) | (b << 16) | (a << 24);
-    }
-    unsigned int Get_Width() const
-    {
-        return Width;
-    }
-    unsigned int Get_Height() const
-    {
-        return Height;
-    }
-    void Set(unsigned int x, unsigned int y, unsigned int d)
-    {
-        Data[x + y * Width] = d;
-    }
-    unsigned int Get(unsigned int x, unsigned int y) const
-    {
-        return Data[x + y * Width];
-    }
-    unsigned int Get(unsigned int i) const
-    {
-        return Data[i];
-    }
-    const std::string &Get_Name() const
-    {
-        return Name;
-    }
-    unsigned int *Get_Data()
-    {
-        return &Data[0];
-    }
-    const unsigned int *Get_Data() const
-    {
-        return &Data[0];
-    }
+	RGBAImage(unsigned int w, unsigned int h, const std::string &name="")
+		: Width(w), Height(h), Name(name), Data(w * h)
+	{
+	}
+	unsigned char Get_Red(unsigned int i) const
+	{
+		return (Data[i] & 0xFF);
+	}
+	unsigned char Get_Green(unsigned int i) const
+	{
+		return ((Data[i] >> 8) & 0xFF);
+	}
+	unsigned char Get_Blue(unsigned int i) const
+	{
+		return ((Data[i] >> 16) & 0xFF);
+	}
+	unsigned char Get_Alpha(unsigned int i) const
+	{
+		return ((Data[i] >> 24) & 0xFF);
+	}
+	void Set(unsigned char r, unsigned char g, unsigned char b,
+			 unsigned char a, unsigned int i)
+	{
+		Data[i] = r | (g << 8) | (b << 16) | (a << 24);
+	}
+	unsigned int Get_Width() const
+	{
+		return Width;
+	}
+	unsigned int Get_Height() const
+	{
+		return Height;
+	}
+	void Set(unsigned int x, unsigned int y, unsigned int d)
+	{
+		Data[x + y * Width] = d;
+	}
+	unsigned int Get(unsigned int x, unsigned int y) const
+	{
+		return Data[x + y * Width];
+	}
+	unsigned int Get(unsigned int i) const
+	{
+		return Data[i];
+	}
+	const std::string &Get_Name() const
+	{
+		return Name;
+	}
+	unsigned int *Get_Data()
+	{
+		return &Data[0];
+	}
+	const unsigned int *Get_Data() const
+	{
+		return &Data[0];
+	}
 
-    /** By default down sample to half of each original dimension.
-     */
-    std::shared_ptr<RGBAImage> DownSample(unsigned int w=0,
-                                          unsigned int h=0) const;
-
-    void WriteToFile(const std::string &filename) const;
-    static std::shared_ptr<RGBAImage>
-    ReadFromFile(const std::string &filename);
+	void WriteToFile(const std::string &filename) const;
+	static std::shared_ptr<RGBAImage>
+	ReadFromFile(const std::string &filename);
 
 private:
-    const unsigned int Width;
-    const unsigned int Height;
-    const std::string Name;
-    std::vector<unsigned int> Data;
+	const unsigned int Width;
+	const unsigned int Height;
+	const std::string Name;
+	std::vector<unsigned int> Data;
 };
 
 
@@ -120,10 +114,10 @@ class RGBImageException : public virtual std::invalid_argument
 {
 public:
 
-    RGBImageException(const std::string &message)
-        : std::invalid_argument(message)
-    {
-    }
+	RGBImageException(const std::string &message)
+		: std::invalid_argument(message)
+	{
+	}
 };
 
 #endif
