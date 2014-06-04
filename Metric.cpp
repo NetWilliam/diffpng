@@ -385,12 +385,6 @@ bool Yee_Compare(CompareArgs &args)
 	s << pixels_failed << " error sum\n";
 	const std::string different = s.str();
 
-//	const auto error_sum_buff =
-//		std::string(error_sum) + " error sum\n";
-
-//	const auto different =
-//		std::string(pixels_failed) + " pixels are different\n";
-
 	// Always output image difference if requested.
 	if (args.ImgDiff)
 	{
