@@ -94,6 +94,18 @@ std::shared_ptr<LODEPNG_BITMAP> ToLodePNG(const RGBAImage &image)
 	return bitmap;
 }
 
+//Encode from raw pixels to disk with a single function call
+//The image argument has width * height RGBA pixels or width * height * 4 bytes
+void encodeOneStep(const char* filename, std::vector<unsigned char>& image, unsigned width, unsigned height)
+{
+	//Encode the image
+	unsigned error = lodepng::encode(filename, image, width, height);
+
+	//if there's an error, display it
+	if(error) std::cout << "encoder error " << error << ": "<< lodepng_error_text(error) << std::endl;
+}
+
+
 void RGBAImage::WriteToFile(const std::string &filename) const
 {
 	std::cout << "WriteToFile:" << filename << "\n";
@@ -115,7 +127,7 @@ void RGBAImage::WriteToFile(const std::string &filename) const
 		}
 	}
 
-	encodeOneStep(filename, image, width, height);
+	encodeOneStep(filename.c_str(), image, width, height);
 /*	const file_type = LodePNG_GetFIFFromFilename(filename.c_str());
 	if (FIF_UNKNOWN == file_type)
 	{
