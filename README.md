@@ -1,10 +1,9 @@
-=======
 diffpng
 =======
 
 Compare two .png image files
 
-#License
+##license
 
 Copyright (C) 2006-2011 Yangli Hector Yee (PerceptualDiff)
 
@@ -22,14 +21,14 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details in the
 file LICENSE
 
-#build & install
+##build & install
 
     Get Cmake (http://www.cmake.org)
     cmake . && make
     make install DESTDIR="/home/me/mydist"
 
 
-#usage
+##usage
 
     diffpng image1.png image2.png [options]
     --verbose : Turns on verbose mode
@@ -49,7 +48,7 @@ file LICENSE
     --sum-errors : Print a sum of the luminance and color differences.
     --output foo.ppm : Saves the difference image to foo.ppm
 
-#design philosophy
+##design philosophy
 
 1. simple
 2. portable
