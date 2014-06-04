@@ -9,6 +9,7 @@ Compare two .png image files based on Hector Yee's PerceptualDiff algorithm
 The top two images can be compared with 'diffpng img1.png img2.png -o diff.png'.
 *![OpenSCAD Monotone example](/test/ossphere_mono.png "OpenSCAD Monotone")
 *![OpenSCAD Color example](/test/ossphere_color2.png "OpenSCAD Color")
+
 The resulting diff.png looks like this: (red=same, black=difference)
 *![diffpng result](/test/diffpng_example.png "diffpng example")
 
