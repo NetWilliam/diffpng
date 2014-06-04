@@ -65,13 +65,7 @@ file LICENSE
 
 ###credits
 
-( from Steven Myint's fork of PerceptualDiff https://github.com/myint/perceptualdiff )
-
-* Hector Yee, project administrator and originator - hectorgon.blogspot.com.
-* Scott Corley, for png file IO code.
-* Tobias Sauerwein, for make install, package_source Cmake configuration.
-* Cairo Team, for bugfixes.
-* Jim Tilander, rewrote the IO to use FreeImage.
-* Steven Myint, for OpenMP support and bug fixes.
-* Jeff Terrace, for better FreeImage support and new command-line options.
+* Hector Yee, author of original PerceptualDiff. http://hectorgon.blogspot.com
+* Steven Myint, major fork. https://github.com/myint/perceptualdiff
+** Scott Corley, Tobias Sauerwein, Cairo Team, Jim Tilander, Jeff Terrace
 
