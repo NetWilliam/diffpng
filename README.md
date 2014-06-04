@@ -9,8 +9,8 @@ Compare two .png image files based on Hector Yee's PerceptualDiff algorithm
 Consider these two images. One has green inner walls, the other does not. 
 Percpetually, to the human eye, they are different. 
 
-*![OpenSCAD Color example](/test/ossphere_color2.png "OpenSCAD Color")
-*![OpenSCAD Monotone example](/test/ossphere_mono.png "OpenSCAD Monotone")
+![OpenSCAD Color example](/test/ossphere_color2.png "OpenSCAD Color")
+![OpenSCAD Monotone example](/test/ossphere_mono.png "OpenSCAD Monotone")
 
 We can compare these two images using diffpng as follows:
 
@@ -24,7 +24,7 @@ different.
 It will also produce an image highlighting the differences. 
 The resulting diff.png looks like this: (black=same, red=difference)
 
-*![diffpng result](/test/diffpng_example.png "diffpng example")
+![diffpng result](/test/diffpng_example.png "diffpng example")
 
 ###license
 
