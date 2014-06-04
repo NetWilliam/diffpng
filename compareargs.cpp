@@ -41,17 +41,17 @@ static const auto usage = "Usage: diffpng image1 image2\n\
 Compares image1 and image2 using a perceptually based image metric.\n\
 \n\
 Options:\n\
-	--verbose	   : Turns on verbose mode\n\
-	--fov deg	   : Field of view in degrees (0.1 to 89.9)\n\
-	--threshold p   : #pixels p below which differences are ignored\n\
-	--gamma g	   : Value to convert rgb into linear space (default 2.2)\n\
-	--luminance l   : White luminance (default 100.0 cdm^-2)\n\
-	--luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
-	--colorfactor   : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
-	--scale		 : Scale images to match each other's dimensions.\n\
-	--sum-errors	: Print a sum of the luminance and color differences.\n\
-	--output o.ppm  : Write difference to the file o.ppm\n\
-	--maxlevels n   : set the maximum number of Laplacian Pyramid Levels\n\
+ --verbose	Turns on verbose mode\n\
+ --fov deg	Field of view in degrees (0.1 to 89.9)\n\
+ --threshold p   # of pixels p below which differences are ignored\n\
+ --gamma g	Value to convert rgb into linear space (default 2.2)\n\
+ --luminance l   White luminance (default 100.0 cdm^-2)\n\
+ --luminanceonly Only consider luminance; ignore chroma (color) in the comparison\n\
+ --colorfactor   How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
+ --scale		Scale images to match each other's dimensions.\n\
+ --sum-errors	Print a sum of the luminance and color differences.\n\
+ --output o.ppm  Write difference to the file o.ppm\n\
+ --maxlevels n   set the maximum number of Laplacian Pyramid Levels\n\
 \n";
 
 
@@ -98,7 +98,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		ss << copyright;
 		ss << usage;
 		ss << "\n"
-		   << "OpenMP status: ";
+		   << "OpenMP status";
 #ifdef _OPENMP
 		ss << "enabled\n";
 #else
@@ -190,7 +190,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 				auto img = RGBAImage::ReadFromFile(argv[i]);
 				if (not img)
 				{
-					ErrorStr = "FAIL: Cannot open ";
+					ErrorStr = "FAILCannot open ";
 					ErrorStr += argv[i];
 					ErrorStr += "\n";
 					return false;
@@ -215,7 +215,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			}
 			else
 			{
-				std::cerr << "Warning: option/file \"" << argv[i]
+				std::cerr << "Warningoption/file \"" << argv[i]
 						  << "\" ignored\n";
 			}
 		}
@@ -233,7 +233,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 
 	if (not ImgA or not ImgB)
 	{
-		ErrorStr = "FAIL: Not enough image files specified\n";
+		ErrorStr = "FAILNot enough image files specified\n";
 		return false;
 	}
 
