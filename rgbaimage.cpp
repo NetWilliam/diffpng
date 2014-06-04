@@ -19,6 +19,40 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
+
+/*
+
+This source has been heavily modified from both PerceptualDiff and LodePNG Examples
+
+*/
+
+/*
+LodePNG Examples
+
+Copyright (c) 2005-2012 Lode Vandevenne
+
+This software is provided 'as-is', without any express or implied
+warranty. In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+    1. The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
+    appreciated but is not required.
+
+    2. Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+
+    3. This notice may not be removed or altered from any source
+    distribution.
+*/
+
+#include <stdint.h>
+
 #include "rgbaimage.h"
 #include "lodepng.h"
 #include <iostream>
@@ -60,40 +94,6 @@ std::shared_ptr<LODEPNG_BITMAP> ToLodePNG(const RGBAImage &image)
 	return bitmap;
 }
 
-std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w, unsigned int h) const
-{
-/*	if (w == 0)
-	{
-		w = Width / 2;
-	}
-
-	if (h == 0)
-	{
-		h = Height / 2;
-	}
-
-	if (Width <= 1 or Height <= 1)
-	{
-		return nullptr;
-	}
-	if (Width == w and Height == h)
-	{
-		return nullptr;
-	}
-	assert(w <= Width);
-	assert(h <= Height);
-
-	bitmap = ToLodePNG(*this);
-	std::unique_ptr<LODEPNG_BITMAP, LodePNGDeleter> converted(
-		LodePNG_Rescale(bitmap.get(), w, h, FILTER_BICUBIC));
-
-	img = ToRGBAImage(converted.get(), Name);
-
-*/
-	std::shared_ptr<RGBAImage> img;
-	return img;
-}
-
 void RGBAImage::WriteToFile(const std::string &filename) const
 {
 /*	const file_type = LodePNG_GetFIFFromFilename(filename.c_str());
@@ -119,6 +119,7 @@ void RGBAImage::WriteToFile(const std::string &filename) const
 
 std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(const std::string &filename)
 {
+	std::cout << "reading from file:" << filename << "\n";
 	LODEPNG_BITMAP lodepng_image; //the raw pixels
 	unsigned width, height;
 	unsigned error = lodepng::decode(lodepng_image, width, height, filename.c_str());
@@ -129,8 +130,30 @@ std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(const std::string &filename)
 
 	//the pixels are now in the vector "image", 4 bytes per pixel, 
 	//ordered RGBARGBA..., use it as texture, draw it, ...
+	std::cout << "width " << width << ", height " << height << "\n";
 
-	std::shared_ptr<RGBAImage> result( new RGBAImage(width,height,"newimage") );
+	std::shared_ptr<RGBAImage> rgbaimg( new RGBAImage(width,height,"newimage") );
 
-	return result;
+	for(unsigned y = 0; y < height; y += 1) {
+		for(unsigned x = 0; x < width; x += 1) {
+			//get RGBA components
+			uint32_t red = lodepng_image[4 * y * width + 4 * x + 0]; //red
+			uint32_t green = lodepng_image[4 * y * width + 4 * x + 1]; //green
+			uint32_t blue = lodepng_image[4 * y * width + 4 * x + 2]; //blue
+			uint32_t alpha = lodepng_image[4 * y * width + 4 * x + 3]; //alpha
+
+			//make translucency visible by placing checkerboard pattern behind image
+			//int checkerColor = 191 + 64 * (((x / 16) % 2) == ((y / 16) % 2));
+			//r = (a * r + (255 - a) * checkerColor) / 255;
+			//g = (a * g + (255 - a) * checkerColor) / 255;
+			//b = (a * b + (255 - a) * checkerColor) / 255;
+
+			//give the color value to the pixel of the screenbuffer
+			//uint32_t* bufp;
+			//bufp = (uint32_t *)scr->pixels + (y * scr->pitch / 4) / jump + (x / jump);
+			//*bufp = 65536 * r + 256 * g + b;
+			rgbaimg->Set( red, green, blue, alpha, y*width+x );
+		}
+	}
+	return rgbaimg;
 }

@@ -27,6 +27,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <assert.h>
 
 #ifndef M_PI
 #define M_PI 3.14159265f
@@ -148,11 +149,11 @@ static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 }
 
 
-static unsigned int adaptation(float num_one_degree_pixels)
+static unsigned int adaptation(float num_one_degree_pixels, unsigned int max_pyramid_levels)
 {
 	auto num_pixels = 1.f;
 	auto adaptation_level = 0u;
-	for (auto i = 0u; i < MAX_PYR_LEVELS; i++)
+	for (auto i = 0u; i < max_pyramid_levels; i++)
 	{
 		adaptation_level = i;
 		if (num_pixels > num_one_degree_pixels)
@@ -239,8 +240,8 @@ bool Yee_Compare(CompareArgs &args)
 		std::cout << "Constructing Laplacian Pyramids\n";
 	}
 
-	const LPyramid la(aLum.get(), w, h);
-	const LPyramid lb(bLum.get(), w, h);
+	const LPyramid la(aLum.get(), w, h, args.MaxPyramidLevels);
+	const LPyramid lb(bLum.get(), w, h, args.MaxPyramidLevels);
 
 	const auto num_one_degree_pixels =
 		2.f * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
@@ -251,21 +252,21 @@ bool Yee_Compare(CompareArgs &args)
 		std::cout << "Performing test\n";
 	}
 
-	const auto adaptation_level = adaptation(num_one_degree_pixels);
+	const auto adaptation_level = adaptation(num_one_degree_pixels, args.MaxPyramidLevels);
 
-	float cpd[MAX_PYR_LEVELS];
+	std::vector<float> cpd(args.MaxPyramidLevels);
 	cpd[0] = 0.5f * pixels_per_degree;
-	for (auto i = 1u; i < MAX_PYR_LEVELS; i++)
+	for (auto i = 1u; i < args.MaxPyramidLevels; i++)
 	{
 		cpd[i] = 0.5f * cpd[i - 1];
 	}
 	const auto csf_max = csf(3.248f, 100.0f);
 
-	static_assert(MAX_PYR_LEVELS > 2,
-				  "MAX_PYR_LEVELS must be greater than 2");
+	assert(args.MaxPyramidLevels > 2);
+//				  "args.MaxPyramidLevels must be greater than 2");
 
-	float F_freq[MAX_PYR_LEVELS - 2];
-	for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
+	float F_freq[args.MaxPyramidLevels - 2];
+	for (auto i = 0u; i < args.MaxPyramidLevels - 2; i++)
 	{
 		F_freq[i] = csf_max / csf(cpd[i], 100.0f);
 	}
@@ -278,9 +279,9 @@ bool Yee_Compare(CompareArgs &args)
 		for (auto x = 0u; x < w; x++)
 		{
 			const auto index = x + y * w;
-			float contrast[MAX_PYR_LEVELS - 2];
+			float contrast[args.MaxPyramidLevels - 2];
 			float sum_contrast = 0;
-			for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
+			for (auto i = 0u; i < args.MaxPyramidLevels - 2; i++)
 			{
 				auto n1 =
 					fabsf(la.Get_Value(x, y, i) - la.Get_Value(x, y, i + 1));
@@ -301,7 +302,7 @@ bool Yee_Compare(CompareArgs &args)
 			{
 				sum_contrast = 1e-5f;
 			}
-			float F_mask[MAX_PYR_LEVELS - 2];
+			float F_mask[args.MaxPyramidLevels - 2];
 			auto adapt = la.Get_Value(x, y, adaptation_level) +
 						 lb.Get_Value(x, y, adaptation_level);
 			adapt *= 0.5f;
@@ -309,12 +310,12 @@ bool Yee_Compare(CompareArgs &args)
 			{
 				adapt = 1e-5f;
 			}
-			for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
+			for (auto i = 0u; i < args.MaxPyramidLevels - 2; i++)
 			{
 				F_mask[i] = mask(contrast[i] * csf(cpd[i], adapt));
 			}
 			auto factor = 0.f;
-			for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
+			for (auto i = 0u; i < args.MaxPyramidLevels - 2; i++)
 			{
 				factor += contrast[i] * F_freq[i] * F_mask[i] / sum_contrast;
 			}
