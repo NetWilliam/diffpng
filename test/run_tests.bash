@@ -4,8 +4,8 @@
 # PASS or FAIL status is as expected.
 
 #------------------------------------------------------------------------------
-# Image files and expected perceptualdiff PASS/FAIL status.  Line format is
-# (PASS|FAIL) image1.(tif|png) image2.(tif|png)
+# Image files and expected diffpng PASS/FAIL status.  Line format is
+# (PASS|FAIL) image1.png image2.png
 #
 # Edit the following lines to add additional tests.
 all_tests () {
@@ -16,6 +16,12 @@ PASS cam_mb_ref.png cam_mb.png
 FAIL fish2.png fish1.png
 PASS square.png square_scaled.png
 FAIL Aqsis_vase.png Aqsis_vase_ref.png
+PASS ossphere_color.png ossphere_color2.png
+PASS ossphere_mono.png ossphere_mono2.png
+FAIL ossphere_color.png ossphere_mono.png
+FAIL ossphere_color2.png ossphere_mono.png
+FAIL ossphere_color.png ossphere_mono2.png
+FAIL ossphere_color2.png ossphere_mono2.png
 EOF
 }
 
@@ -23,17 +29,17 @@ EOF
 script_directory=$(dirname "$0")
 cd "$script_directory"
 
-if [ -f '../build/perceptualdiff' ]
+if [ -f '../build/diffpng' ]
 then
-	pdiff=../build/perceptualdiff
-elif [ -f '../perceptualdiff' ]
+	pdiff=../build/diffpng
+elif [ -f '../diffpng' ]
 then
-	pdiff=../perceptualdiff
-elif [ -f '../bin/perceptualdiff' ]
+	pdiff=../diffpng
+elif [ -f '../bin/diffpng' ]
 then
-	pdiff=../bin/perceptualdiff
+	pdiff=../bin/diffpng
 else
-	echo 'perceptualdiff must be built and exist in the repository root or the "build" directory'
+	echo 'diffpng must be built and exist in the repository root or the "build" directory'
 	exit 1
 fi
 

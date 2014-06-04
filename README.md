@@ -24,8 +24,8 @@ file LICENSE
 
     Get Cmake (http://www.cmake.org)
     cmake . && make
+    ctest # run regression tests
     make install DESTDIR="/home/me/mydist"
-
 
 ###usage
 
@@ -55,4 +55,13 @@ file LICENSE
 3. no dependencies
 4. small
 5. regression tests
+
+###
+
+todo
+
+* make all .hpp header files
+* figure out why --luminanceonly works for the openscad tests (color v color2 esp)
+* dtermine why more than 2 or 3 levels of pyramid is needed, or not?
+* test openscad objects from files.openscad.org/tests that have little tiny pieces that are different.
 
