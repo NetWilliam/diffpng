@@ -14,7 +14,7 @@ Percpetually, to the human eye, they are different.
 
 We can compare these two images using diffpng as follows:
 
-    diffpng img1.png img2.png -output diff.png
+    diffpng img1.png img2.png --output diff.png
 
 The program will print a text message indicating the images are 
 different. 
