@@ -109,7 +109,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
         return false;
     }
     auto image_count = 0u;
-    const char *output_file_name = nullptr;
+    const char *output_file_name = NULL;
     auto scale = false;
     for (auto i = 1; i < argc; i++)
     {

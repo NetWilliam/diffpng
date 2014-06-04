@@ -21,6 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "RGBAImage.h"
 #include "lodepng.h"
+#include <iostream>
 
 #include <string>
 #include <cstring>
@@ -59,28 +60,7 @@ std::shared_ptr<LODEPNG_BITMAP> ToLodePNG(const RGBAImage &image)
 	return bitmap;
 }
 
-
-std::shared_ptr<RGBAImage> ToRGBAImage(LODEPNG_BITMAP *image, std::string filename = "")
-{
-	const w = LodePNG_GetWidth(image);
-	const h = LodePNG_GetHeight(image);
-
-	result = std::make_shared<RGBAImage>(w, h, filename);
-	// Copy the image over to our internal format, LodePNG has the scanlines
-	// bottom to top though.
-	dest = result->Get_Data();
-	for (unsigned int y = 0; y < h; y++, dest += w)
-	{
-		const scanline = reinterpret_cast<const unsigned int *>(
-			LodePNG_GetScanLine(image, h - y - 1));
-		memcpy(dest, scanline, sizeof(dest[0]) * w);
-	}
-
-	return result;
-
-}
-
-std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w, unsigned int h)
+std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w, unsigned int h) const
 {
 /*	if (w == 0)
 	{
@@ -110,10 +90,11 @@ std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w, unsigned int h)
 	img = ToRGBAImage(converted.get(), Name);
 
 */
+	std::shared_ptr<RGBAImage> img;
 	return img;
 }
 
-void RGBAImage::WriteToFile(std::string filename) const
+void RGBAImage::WriteToFile(const std::string &filename) const
 {
 /*	const file_type = LodePNG_GetFIFFromFilename(filename.c_str());
 	if (FIF_UNKNOWN == file_type)
@@ -136,7 +117,7 @@ void RGBAImage::WriteToFile(std::string filename) const
 	}*/
 }
 
-std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(std::string filename)
+std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(const std::string &filename)
 {
 	LODEPNG_BITMAP lodepng_image; //the raw pixels
 	unsigned width, height;
@@ -149,7 +130,7 @@ std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(std::string filename)
 	//the pixels are now in the vector "image", 4 bytes per pixel, 
 	//ordered RGBARGBA..., use it as texture, draw it, ...
 
-	RGBAImage result = ToRGBAImage(lodepng_image);
+	std::shared_ptr<RGBAImage> result( new RGBAImage(width,height,"newimage") );
 
 	return result;
 }
