@@ -96,6 +96,26 @@ std::shared_ptr<LODEPNG_BITMAP> ToLodePNG(const RGBAImage &image)
 
 void RGBAImage::WriteToFile(const std::string &filename) const
 {
+	std::cout << "WriteToFile:" << filename << "\n";
+
+	unsigned width = this->Width, height = this->Height;
+	std::vector<unsigned char> image;
+	image.resize(width * height * 4);
+	for(unsigned y = 0; y < height; y++) {
+		for(unsigned x = 0; x < width; x++) {
+			unsigned char red, green, blue, alpha;
+			red = Get_Red( y*width + x );
+			green = Get_Green( y*width + x );
+			blue = Get_Blue( y*width + x );
+			alpha = Get_Alpha( y*width + x );
+			image[4 * width * y + 4 * x + 0] = red;
+			image[4 * width * y + 4 * x + 1] = blue;
+			image[4 * width * y + 4 * x + 2] = green;
+			image[4 * width * y + 4 * x + 3] = alpha;
+		}
+	}
+
+	encodeOneStep(filename, image, width, height);
 /*	const file_type = LodePNG_GetFIFFromFilename(filename.c_str());
 	if (FIF_UNKNOWN == file_type)
 	{

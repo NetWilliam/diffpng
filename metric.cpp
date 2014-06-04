@@ -187,8 +187,7 @@ bool Yee_Compare(CompareArgs &args)
 	}
 	if (identical)
 	{
-		args.ErrorStr = "Images are binary identical\n";
-		//return true;
+		std::cout << "Images are binary identical\n";
 	}
 
 	// assuming colorspaces are in Adobe RGB (1998) convert to XYZ
@@ -263,7 +262,6 @@ bool Yee_Compare(CompareArgs &args)
 	const auto csf_max = csf(3.248f, 100.0f);
 
 	assert(args.MaxPyramidLevels > 2);
-//				  "args.MaxPyramidLevels must be greater than 2");
 
 	float F_freq[args.MaxPyramidLevels - 2];
 	for (auto i = 0u; i < args.MaxPyramidLevels - 2; i++)
