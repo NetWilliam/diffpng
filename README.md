@@ -65,7 +65,8 @@ file LICENSE
 
 ###credits
 
-* ( from Steven Myint's fork of PerceptualDiff https://github.com/myint/perceptualdiff )
+( from Steven Myint's fork of PerceptualDiff https://github.com/myint/perceptualdiff )
+
 * Hector Yee, project administrator and originator - hectorgon.blogspot.com.
 * Scott Corley, for png file IO code.
 * Tobias Sauerwein, for make install, package_source Cmake configuration.
