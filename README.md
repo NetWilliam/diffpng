@@ -6,9 +6,15 @@ Compare two .png image files based on Hector Yee's PerceptualDiff algorithm
 
 ###hows it work?
 
-The top two images can be compared with 'diffpng img1.png img2.png -o diff.png'.
+Consider these two images. One has green inner walls, the other does not. 
+Percpetually, to the human eye, they are different. 
+
 *![OpenSCAD Monotone example](/test/ossphere_mono.png "OpenSCAD Monotone")
 *![OpenSCAD Color example](/test/ossphere_color2.png "OpenSCAD Color")
+
+The top two images can be compared with
+
+    diffpng img1.png img2.png -output diff.png
 
 The resulting diff.png looks like this: (black=same, red=difference)
 *![diffpng result](/test/diffpng_example.png "diffpng example")
@@ -71,6 +77,7 @@ file LICENSE
 * figure out why --luminanceonly works for the openscad tests (color v color2 esp)
 * dtermine why more than 2 or 3 levels of pyramid is needed, or not?
 * test openscad objects from files.openscad.org/tests that have little tiny pieces that are different.
+* -output should be -o
 
 ###credits
 
