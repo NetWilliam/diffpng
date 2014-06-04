@@ -12,11 +12,18 @@ Percpetually, to the human eye, they are different.
 *![OpenSCAD Monotone example](/test/ossphere_mono.png "OpenSCAD Monotone")
 *![OpenSCAD Color example](/test/ossphere_color2.png "OpenSCAD Color")
 
-The top two images can be compared with
+We can compare these two images using diffpng as follows:
 
     diffpng img1.png img2.png -output diff.png
 
+The program will print a text message indicating the images are 
+different. 
+
+    FAIL: Images are visibly different
+
+It will also produce an image highlighting the differences. 
 The resulting diff.png looks like this: (black=same, red=difference)
+
 *![diffpng result](/test/diffpng_example.png "diffpng example")
 
 ###license
