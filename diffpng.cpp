@@ -7,7 +7,6 @@ A perceptual metric for production testing. Journal of graphics tools,
 
 Copyright (C) 2006-2011 Yangli Hector Yee (perceptualdiff)
 Copyright (C) 2011-2014 Steven Myint (perceptualdiff)
-Copyright (C) 2014 Don Bright
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -23,7 +22,7 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include "metric.hpp"
+#include "diffpng.hpp"
 
 #include <iostream>
 #include <string>
