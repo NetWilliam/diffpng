@@ -18,9 +18,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
 #include "metric.h"
-#include "compareargs.h"
-#include "rgbaimage.h"
-#include "lpyramid.h"
+#include "compareargs.hpp"
+#include "rgbaimage.hpp"
+#include "lpyramid.hpp"
 
 #include <cmath>
 #include <iostream>

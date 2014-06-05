@@ -23,9 +23,9 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include "lpyramid.h"
-#include "rgbaimage.h"
-#include "compareargs.h"
+#include "lpyramid.hpp"
+#include "rgbaimage.hpp"
+#include "compareargs.hpp"
 #include "metric.h"
 
 #include <iostream>
@@ -66,14 +66,9 @@ int main(int argc, char **argv)
 
         return passed ? 0 : 1;
     }
-    catch (const ParseException &exception)
+    catch (...)
     {
-        std::cerr << exception.what() << std::endl;
+        std::cerr << "Exception" << std::endl;
         return 1;
-    }
-    catch (const RGBImageException &exception)
-    {
-        std::cerr << exception.what() << std::endl;
-        return 2;
     }
 }

@@ -3,8 +3,7 @@ project(diffpng)
 cmake_minimum_required(VERSION 2.4)
 
 add_executable(
-  diffpng
-  diffpng.cpp lpyramid.cpp rgbaimage.cpp compareargs.cpp metric.cpp lodepng.cpp)
+  diffpng diffpng.cpp metric.cpp lodepng.cpp)
 
 install(TARGETS diffpng DESTINATION bin)
 
