@@ -23,10 +23,7 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include "lpyramid.hpp"
-#include "rgbaimage.hpp"
-#include "compareargs.hpp"
-#include "metric.h"
+#include "metric.hpp"
 
 #include <iostream>
 #include <string>
