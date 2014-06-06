@@ -21,7 +21,9 @@ different.
 
     FAIL: Images are visibly different
 
-It will also produce an image highlighting the differences. 
+(If they had been similar, it would say "PASS: Images are roughly the same")
+
+The program will also produce an image highlighting the differences. 
 The resulting diff.png looks like this: (black=same, red=difference)
 
 ![diffpng result](/test/basic/diffpng_example.png "diffpng example")
@@ -63,6 +65,13 @@ file LICENSE
 4. small
 5. regression tests
 
+practical effects of philosophy:
+
+1. use very plain C++. no exceptions.
+2. as few files as possible (four.. can it be less?)
+3. make default settings so it 'just works' for most ordinary situations
+4. regression test images take up several megabytes (under test/ dir)
+
 ###todo
 
 clarify issue with chroma vs luminance. . . do color swatches produce diffs?
@@ -71,6 +80,8 @@ can we use colorfactor 0.1 or 0.05?
 should tiny speckled pixels count as 'different'?
 
 clarify the 'default settings' vs what settings user can alter.
+
+windows unicode filenames
 
 ###credits
 
