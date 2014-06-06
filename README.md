@@ -67,7 +67,7 @@ file LICENSE
 
 practical effects of philosophy:
 
-1. use very plain C++. no exceptions.
+1. use very plain C++. no exceptions. no pointers.
 2. as few files as possible (four.. can it be less?)
 3. make default settings so it 'just works' for most ordinary situations
 4. regression test images take up several megabytes (under test/ dir)
@@ -99,3 +99,4 @@ For the original PerceptualDiff (PDiff):
 For diffpng:
 
 * Lode Vandevenne's lodepng. http://lodev.org/lodepng/
+* OpenSCAD regression test images http://github.com/openscad/openscad/tests

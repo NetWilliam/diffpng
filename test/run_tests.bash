@@ -183,7 +183,7 @@ PASS cgalpngtest/surface-tests-actual.png cgalpngtest/surface-tests-expected.png
 PASS cgalpngtest/text-actual.png cgalpngtest/text-expected.png
 PASS cgalpngtest/text-font-direction-tests-actual.png cgalpngtest/text-font-direction-tests-expected.png
 PASS cgalpngtest/text-font-simple-tests-actual.png cgalpngtest/text-font-simple-tests-expected.png
-PASS cgalpngtest/text-font-tests-actual.png cgalpngtest/text-font-tests-expected.png
+FAIL cgalpngtest/text-font-tests-actual.png cgalpngtest/text-font-tests-expected.png
 PASS cgalpngtest/text-search-test-actual.png cgalpngtest/text-search-test-expected.png
 PASS cgalpngtest/transform-insert-actual.png cgalpngtest/transform-insert-expected.png
 PASS cgalpngtest/transform-nan-inf-tests-actual.png cgalpngtest/transform-nan-inf-tests-expected.png
@@ -338,7 +338,7 @@ PASS opencsgtest/transform-tests-actual.png opencsgtest/transform-tests-expected
 PASS opencsgtest/translate-actual.png opencsgtest/translate-expected.png
 PASS opencsgtest/translation-actual.png opencsgtest/translation-expected.png
 PASS opencsgtest/triangle-with-duplicate-vertex-actual.png opencsgtest/triangle-with-duplicate-vertex-expected.png
-PASS opencsgtest/tripod-actual.png opencsgtest/tripod-expected.png
+FAIL opencsgtest/tripod-actual.png opencsgtest/tripod-expected.png
 PASS opencsgtest/union-actual.png opencsgtest/union-expected.png
 PASS opencsgtest/union-coincident-test-expected.png opencsgtest/union-coincident-test-actual.png
 PASS opencsgtest/union-tests-actual.png opencsgtest/union-tests-expected.png
