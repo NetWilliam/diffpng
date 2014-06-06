@@ -51,24 +51,9 @@ file LICENSE
 
 ###usage
 
-    diffpng image1.png image2.png [options]
-    --verbose : Turns on verbose mode
-    --fov deg : Field of view, deg, in degrees. Usually between 10.0 to 85.0.
-                This controls how much of the screen the observer is seeing.
-                Front row of a theatre has a field of view of around 25
-                degrees. Back row has a field of view of around 60 degrees.
-    --threshold p : Sets the number of pixels, p, to reject. For example if p
-                    is 100, then the test fails if 100 or more pixels are
-                    perceptibly different.
-    --gamma g : The gamma to use to convert to RGB linear space. Default is 2.2
-    --luminance l : The luminance of the display the observer is seeing.
-                    Default is 100 candela per meter squared
-    --colorfactor : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.
-    --scale : Scale images to match each other's dimensions.
-    --sum-errors : Print a sum of the luminance and color differences.
-    --maxlevels n : Set the maximum number of Laplacian Pyramids to use.
-      (less is faster)
-    --output foo.png : Save a diff image, black=different, red=same. 
+    diffpng image1.png image2.png --output diff.png
+
+    for other options, run diffpng --help
 
 ###design philosophy
 
@@ -80,11 +65,12 @@ file LICENSE
 
 ###todo
 
-* make all .hpp header files
-* figure out why --luminanceonly works for the openscad tests (color v color2 esp)
-* dtermine why more than 2 or 3 levels of pyramid is needed, or not?
-* test openscad objects from files.openscad.org/tests that have little tiny pieces that are different.
-* -output should be -o
+clarify issue with chroma vs luminance. . . do color swatches produce diffs?
+can we use colorfactor 0.1 or 0.05? 
+
+should tiny speckled pixels count as 'different'?
+
+clarify the 'default settings' vs what settings user can alter.
 
 ###credits
 
