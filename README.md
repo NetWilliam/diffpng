@@ -47,7 +47,7 @@ file LICENSE
     Get Cmake (http://www.cmake.org)
     mkdir bin && cd bin && cmake .. && make
     cd ../test && ./run_tests.bash && cd .. # run regression tests
-    make install DESTDIR="/home/me/mydist"
+    cp bin/diffpng /wherever/you/want
 
 ###usage
 
