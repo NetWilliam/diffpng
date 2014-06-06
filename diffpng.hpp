@@ -274,6 +274,8 @@ class CompareArgs
 public:
 	CompareArgs()
 	{
+		// use some nice defaults that will 'just work' for most cases
+		// heavy on luminance, light on color (colorfactor 0.1)
 		Verbose = true;
 		LuminanceOnly = false;
 		SumErrors = false;
@@ -281,7 +283,7 @@ public:
 		Gamma = 2.2f;
 		ThresholdPixels = 100;
 		Luminance = 100.0f;
-		ColorFactor = 1.0f;
+		ColorFactor = 0.1f;
 		MaxPyramidLevels = 2;
 	}
 	bool Parse_Args(int argc, char **argv)
