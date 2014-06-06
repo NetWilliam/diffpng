@@ -24,7 +24,7 @@ different.
 It will also produce an image highlighting the differences. 
 The resulting diff.png looks like this: (black=same, red=difference)
 
-![diffpng result](/test/diffpng_example.png "diffpng example")
+![diffpng result](/test/basic/diffpng_example.png "diffpng example")
 
 ###license
 
