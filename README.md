@@ -46,7 +46,7 @@ file LICENSE
 
     Get Cmake (http://www.cmake.org)
     cmake . && make
-    ctest # run regression tests
+    cd test && ./run_tests.bash && cd .. # run regression tests
     make install DESTDIR="/home/me/mydist"
 
 ###usage
