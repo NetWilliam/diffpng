@@ -375,7 +375,7 @@ num_tests_failed=0
 if [ ! -e fails ]; then
 	mkdir fails
 fi
-rm ./fails/*
+rm -f ./fails/*
 
 brightred="\033[40;31m"
 gray="\033[40;37m"
