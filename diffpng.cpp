@@ -47,7 +47,7 @@ int main(int argc, char **argv)
             }
         }
 
-        const auto passed = Yee_Compare(args);
+        const auto passed = LevelClimberCompare(args);
         if (passed)
         {
             if (args.Verbose)

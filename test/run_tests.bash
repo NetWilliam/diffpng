@@ -65,27 +65,27 @@ PASS cgalpngtest/camera-tests-actual.png cgalpngtest/camera-tests-expected.png
 PASS cgalpngtest/child-child-test-actual.png cgalpngtest/child-child-test-expected.png
 PASS cgalpngtest/child-tests-actual.png cgalpngtest/child-tests-expected.png
 PASS cgalpngtest/chopped_blocks-actual.png cgalpngtest/chopped_blocks-expected.png
-PASS cgalpngtest/circle-actual.png cgalpngtest/circle-advanced-actual.png
-PASS cgalpngtest/circle-advanced-expected.png cgalpngtest/circle-double-actual.png
-PASS cgalpngtest/circle-double-expected.png cgalpngtest/circle-expected.png
+PASS cgalpngtest/circle-actual.png cgalpngtest/circle-expected.png
+PASS cgalpngtest/circle-advanced-expected.png cgalpngtest/circle-advanced-actual.png
+PASS cgalpngtest/circle-double-expected.png cgalpngtest/circle-double-actual.png
 PASS cgalpngtest/circle-small-actual.png cgalpngtest/circle-small-expected.png
 PASS cgalpngtest/circle-tests-actual.png cgalpngtest/circle-tests-expected.png
 PASS cgalpngtest/color-tests-actual.png cgalpngtest/color-tests-expected.png
 PASS cgalpngtest/control-hull-dimension-actual.png cgalpngtest/control-hull-dimension-expected.png
 PASS cgalpngtest/cube-tests-actual.png cgalpngtest/cube-tests-expected.png
-PASS cgalpngtest/cut_view-actual.png cgalpngtest/cut_view-expected.png
+FAIL cgalpngtest/cut_view-actual.png cgalpngtest/cut_view-expected.png
 PASS cgalpngtest/cylinder-diameter-tests-actual.png cgalpngtest/cylinder-diameter-tests-expected.png
 PASS cgalpngtest/cylinder-tests-actual.png cgalpngtest/cylinder-tests-expected.png
 PASS cgalpngtest/demo_cut-actual.png cgalpngtest/demo_cut-expected.png
 PASS cgalpngtest/difference-2d-tests-actual.png cgalpngtest/difference-2d-tests-expected.png
-PASS cgalpngtest/difference-actual.png cgalpngtest/difference_cube-actual.png
-PASS cgalpngtest/difference_cube-expected.png cgalpngtest/difference-expected.png
+FAIL cgalpngtest/difference-actual.png cgalpngtest/difference-expected.png
+PASS cgalpngtest/difference_cube-expected.png cgalpngtest/difference_cube-actual.png
 PASS cgalpngtest/difference_sphere-actual.png cgalpngtest/difference_sphere-expected.png
 PASS cgalpngtest/difference-tests-actual.png cgalpngtest/difference-tests-expected.png
 PASS cgalpngtest/disable-modifier-actual.png cgalpngtest/disable-modifier-expected.png
-PASS cgalpngtest/ellipse-actual.png cgalpngtest/ellipse-arc-actual.png
-PASS cgalpngtest/ellipse-arc-expected.png cgalpngtest/ellipse-arc-rot-actual.png
-PASS cgalpngtest/ellipse-arc-rot-expected.png cgalpngtest/ellipse-expected.png
+PASS cgalpngtest/ellipse-actual.png cgalpngtest/ellipse-expected.png
+PASS cgalpngtest/ellipse-arc-expected.png cgalpngtest/ellipse-arc-actual.png
+PASS cgalpngtest/ellipse-arc-rot-expected.png cgalpngtest/ellipse-arc-rot-actual.png
 PASS cgalpngtest/ellipse-reverse-actual.png cgalpngtest/ellipse-reverse-expected.png
 PASS cgalpngtest/ellipse-rot-actual.png cgalpngtest/ellipse-rot-expected.png
 PASS cgalpngtest/empty-shape-tests-actual.png cgalpngtest/empty-shape-tests-expected.png
@@ -108,22 +108,22 @@ PASS cgalpngtest/intersection2-tests-actual.png cgalpngtest/intersection2-tests-
 PASS cgalpngtest/intersection-actual.png cgalpngtest/intersection-expected.png
 PASS cgalpngtest/intersection_for-tests-actual.png cgalpngtest/intersection_for-tests-expected.png
 PASS cgalpngtest/intersection-tests-actual.png cgalpngtest/intersection-tests-expected.png
-PASS cgalpngtest/issue112-actual.png cgalpngtest/issue112-expected.png
+FAIL cgalpngtest/issue112-actual.png cgalpngtest/issue112-expected.png
 
 FAIL cgalpngtest/issue495b-actual.png cgalpngtest/issue495b-expected.png
-FAIL cgalpngtest/issue495-actual.png cgalpngtest/issue495-expected.png
-FAIL cgalpngtest/issue541-actual.png cgalpngtest/issue541-expected.png
-FAIL cgalpngtest/issue578-actual.png cgalpngtest/issue578b-actual.png
-FAIL cgalpngtest/issue578b-expected.png cgalpngtest/issue578-expected.png
-FAIL cgalpngtest/issue584-actual.png cgalpngtest/issue584-expected.png
-FAIL cgalpngtest/issue585-actual.png cgalpngtest/issue585-expected.png
+PASS cgalpngtest/issue495-actual.png cgalpngtest/issue495-expected.png
+PASS cgalpngtest/issue541-actual.png cgalpngtest/issue541-expected.png
+PASS cgalpngtest/issue578-actual.png cgalpngtest/issue578-actual.png
+PASS cgalpngtest/issue578b-expected.png cgalpngtest/issue578b-expected.png
+PASS cgalpngtest/issue584-actual.png cgalpngtest/issue584-expected.png
+PASS cgalpngtest/issue585-actual.png cgalpngtest/issue585-expected.png
 FAIL cgalpngtest/issue591-actual.png cgalpngtest/issue591-expected.png
-FAIL cgalpngtest/issue612-actual.png cgalpngtest/issue612-expected.png
-FAIL cgalpngtest/issue666-actual.png cgalpngtest/issue666-expected.png
+PASS cgalpngtest/issue612-actual.png cgalpngtest/issue612-expected.png
+PASS cgalpngtest/issue666-actual.png cgalpngtest/issue666-expected.png
 FAIL cgalpngtest/issue802-actual.png cgalpngtest/issue802-expected.png
 
 PASS cgalpngtest/iteration-actual.png cgalpngtest/iteration-expected.png
-PASS cgalpngtest/linear_extrude-scale-zero-tests-actual.png cgalpngtest/linear_extrude-scale-zero-tests-expected.png
+FAIL cgalpngtest/linear_extrude-scale-zero-tests-actual.png cgalpngtest/linear_extrude-scale-zero-tests-expected.png
 PASS cgalpngtest/linear_extrude-tests-actual.png cgalpngtest/linear_extrude-tests-expected.png
 PASS cgalpngtest/localfiles-compatibility-test-actual.png cgalpngtest/localfiles-compatibility-test-expected.png
 PASS cgalpngtest/localfiles-test-actual.png cgalpngtest/localfiles-test-expected.png
@@ -150,8 +150,8 @@ PASS cgalpngtest/polygon-many-holes-actual.png cgalpngtest/polygon-many-holes-ex
 PASS cgalpngtest/polygon-mesh-actual.png cgalpngtest/polygon-mesh-expected.png
 PASS cgalpngtest/polygon-overlap-actual.png cgalpngtest/polygon-overlap-expected.png
 PASS cgalpngtest/polygon-riser-actual.png cgalpngtest/polygon-riser-expected.png
-PASS cgalpngtest/polygons-actual.png cgalpngtest/polygon-self-intersect-actual.png
-PASS cgalpngtest/polygon-self-intersect-expected.png cgalpngtest/polygons-expected.png
+PASS cgalpngtest/polygons-actual.png cgalpngtest/polygons-expected.png
+PASS cgalpngtest/polygon-self-intersect-expected.png cgalpngtest/polygon-self-intersect-actual.png
 PASS cgalpngtest/polygon-tests-actual.png cgalpngtest/polygon-tests-expected.png
 PASS cgalpngtest/polyhedron-actual.png cgalpngtest/polyhedron-expected.png
 PASS cgalpngtest/polyhedron-nonplanar-tests-actual.png cgalpngtest/polyhedron-nonplanar-tests-expected.png
@@ -166,7 +166,6 @@ PASS cgalpngtest/resize-2d-tests-actual.png cgalpngtest/resize-2d-tests-expected
 PASS cgalpngtest/resize-tests-actual.png cgalpngtest/resize-tests-expected.png
 PASS cgalpngtest/root-modifier-actual.png cgalpngtest/root-modifier-expected.png
 PASS cgalpngtest/rotate-empty-bbox-actual.png cgalpngtest/rotate-empty-bbox-expected.png
-PASS cgalpngtest/rotate_extrude_dxf-tests-actual.png cgalpngtest/rotate_extrude_dxf-tests-expected.png
 PASS cgalpngtest/rotate_extrude-tests-actual.png cgalpngtest/rotate_extrude-tests-expected.png
 PASS cgalpngtest/rounded_box-actual.png cgalpngtest/rounded_box-expected.png
 PASS cgalpngtest/scale2D-tests-actual.png cgalpngtest/scale2D-tests-expected.png
@@ -182,7 +181,6 @@ PASS cgalpngtest/surface-png-image-tests-actual.png cgalpngtest/surface-png-imag
 PASS cgalpngtest/surface-simple-actual.png cgalpngtest/surface-simple-expected.png
 PASS cgalpngtest/surface-tests-actual.png cgalpngtest/surface-tests-expected.png
 PASS cgalpngtest/text-actual.png cgalpngtest/text-expected.png
-PASS cgalpngtest/text-font-alignment-tests-actual.png cgalpngtest/text-font-alignment-tests-expected.png
 PASS cgalpngtest/text-font-direction-tests-actual.png cgalpngtest/text-font-direction-tests-expected.png
 PASS cgalpngtest/text-font-simple-tests-actual.png cgalpngtest/text-font-simple-tests-expected.png
 PASS cgalpngtest/text-font-tests-actual.png cgalpngtest/text-font-tests-expected.png
@@ -198,8 +196,10 @@ PASS cgalpngtest/union-actual.png cgalpngtest/union-expected.png
 PASS cgalpngtest/union-coincident-test-actual.png cgalpngtest/union-coincident-test-expected.png
 PASS cgalpngtest/union-tests-actual.png cgalpngtest/union-tests-expected.png
 PASS cgalpngtest/use-tests-actual.png cgalpngtest/use-tests-expected.png
+FAIL cgalpngtest/text-font-alignment-tests-actual.png cgalpngtest/text-font-alignment-tests-expected.png
+FAIL cgalpngtest/rotate_extrude_dxf-tests-actual.png cgalpngtest/rotate_extrude_dxf-tests-expected.png
 
-PASS opencsgtest/2d-3d-actual.png 2d-3d-expected.png
+PASS opencsgtest/2d-3d-actual.png opencsgtest/2d-3d-expected.png
 PASS opencsgtest/advance_intersection-actual.png opencsgtest/advance_intersection-expected.png
 PASS opencsgtest/arc-actual.png opencsgtest/arc-expected.png
 PASS opencsgtest/assign-tests-actual.png opencsgtest/assign-tests-expected.png
@@ -215,13 +215,12 @@ PASS opencsgtest/circle-tests-actual.png opencsgtest/circle-tests-expected.png
 PASS opencsgtest/color-tests-actual.png opencsgtest/color-tests-expected.png
 PASS opencsgtest/control-hull-dimension-actual.png opencsgtest/control-hull-dimension-expected.png
 PASS opencsgtest/cube-tests-actual.png opencsgtest/cube-tests-expected.png
-PASS opencsgtest/cut_view-actual.png opencsgtest/cut_view-expected.png
+FAIL opencsgtest/cut_view-actual.png opencsgtest/cut_view-expected.png
 PASS opencsgtest/cylinder-diameter-tests-actual.png opencsgtest/cylinder-diameter-tests-expected.png
 PASS opencsgtest/cylinder-tests-actual.png opencsgtest/cylinder-tests-expected.png
 PASS opencsgtest/demo_cut-actual.png opencsgtest/demo_cut-expected.png
 PASS opencsgtest/difference-2d-tests-actual.png opencsgtest/difference-2d-tests-expected.png
 PASS opencsgtest/difference_cube-actual.png opencsgtest/difference_cube-expected.png
-PASS opencsgtest/difference-actual.png opencsgtest/difference-expected.png
 PASS opencsgtest/difference_sphere-actual.png opencsgtest/difference_sphere-expected.png
 PASS opencsgtest/difference-tests-actual.png opencsgtest/difference-tests-expected.png
 PASS opencsgtest/disable-modifier-actual.png opencsgtest/disable-modifier-expected.png
@@ -231,7 +230,7 @@ PASS opencsgtest/ellipse-actual.png opencsgtest/ellipse-expected.png
 PASS opencsgtest/ellipse-reverse-actual.png opencsgtest/ellipse-reverse-expected.png
 PASS opencsgtest/ellipse-rot-actual.png opencsgtest/ellipse-rot-expected.png
 PASS opencsgtest/empty-shape-tests-actual.png opencsgtest/empty-shape-tests-expected.png
-PASS opencsgtest/fan_view-actual.png opencsgtest/fan_view-expected.png
+FAIL opencsgtest/fan_view-actual.png opencsgtest/fan_view-expected.png
 PASS opencsgtest/fence-actual.png opencsgtest/fence-expected.png
 PASS opencsgtest/flat_body-actual.png opencsgtest/flat_body-expected.png
 PASS opencsgtest/for-nested-tests-actual.png opencsgtest/for-nested-tests-expected.png
@@ -246,25 +245,26 @@ PASS opencsgtest/import_dxf-tests-actual.png opencsgtest/import_dxf-tests-expect
 PASS opencsgtest/import-empty-tests-actual.png opencsgtest/import-empty-tests-expected.png
 PASS opencsgtest/import_stl-tests-actual.png opencsgtest/import_stl-tests-expected.png
 PASS opencsgtest/include-tests-actual.png opencsgtest/include-tests-expected.png
-PASS opencsgtest/intersecting-actual.png opencsgtest/intersecting-expected.png
 PASS opencsgtest/intersection2-tests-actual.png opencsgtest/intersection2-tests-expected.png
 PASS opencsgtest/intersection-actual.png opencsgtest/intersection-expected.png
-PASS opencsgtest/intersection_for-tests-actual.png opencsgtest/intersection_for-tests-expected.png
 PASS opencsgtest/intersection-prune-test-actual.png opencsgtest/intersection-prune-test-expected.png
 PASS opencsgtest/intersection-tests-actual.png opencsgtest/intersection-tests-expected.png
 PASS opencsgtest/issue112-actual.png opencsgtest/issue112-expected.png
+FAIL opencsgtest/intersecting-actual.png opencsgtest/intersecting-expected.png
+FAIL opencsgtest/intersection_for-tests-actual.png opencsgtest/intersection_for-tests-expected.png
+FAIL opencsgtest/difference-actual.png opencsgtest/difference-expected.png
 
-FAIL opencsgtest/issue495b-actual.png opencsgtest/issue495b-expected.png
+PASS opencsgtest/issue495b-actual.png opencsgtest/issue495b-expected.png
 FAIL opencsgtest/issue495-expected.png opencsgtest/issue495-actual.png
-FAIL opencsgtest/issue541-actual.png opencsgtest/issue541-expected.png
-FAIL opencsgtest/issue578-actual.png opencsgtest/issue578-expected.png
-FAIL opencsgtest/issue578b-actual.png opencsgtest/issue578b-expected.png
+PASS opencsgtest/issue541-actual.png opencsgtest/issue541-expected.png
+PASS opencsgtest/issue578-actual.png opencsgtest/issue578-expected.png
+PASS opencsgtest/issue578b-actual.png opencsgtest/issue578b-expected.png
 FAIL opencsgtest/issue584-actual.png opencsgtest/issue584-expected.png
-FAIL opencsgtest/issue585-actual.png opencsgtest/issue585-expected.png
-FAIL opencsgtest/issue591-actual.png opencsgtest/issue591-expected.png
-FAIL opencsgtest/issue612-actual.png opencsgtest/issue612-expected.png
+PASS opencsgtest/issue585-actual.png opencsgtest/issue585-expected.png
+PASS opencsgtest/issue591-actual.png opencsgtest/issue591-expected.png
+PASS opencsgtest/issue612-actual.png opencsgtest/issue612-expected.png
 FAIL opencsgtest/issue666-actual.png opencsgtest/issue666-expected.png
-FAIL opencsgtest/issue802-actual.png opencsgtest/issue802-expected.png
+PASS opencsgtest/issue802-actual.png opencsgtest/issue802-expected.png
 
 PASS opencsgtest/iteration-actual.png opencsgtest/iteration-expected.png
 PASS opencsgtest/linear_extrude-scale-zero-tests-actual.png opencsgtest/linear_extrude-scale-zero-tests-expected.png
@@ -310,7 +310,7 @@ PASS opencsgtest/resize-2d-tests-actual.png opencsgtest/resize-2d-tests-expected
 PASS opencsgtest/resize-tests-actual.png opencsgtest/resize-tests-expected.png
 PASS opencsgtest/root-modifier-actual.png opencsgtest/root-modifier-expected.png
 PASS opencsgtest/rotate-empty-bbox-actual.png opencsgtest/rotate-empty-bbox-expected.png
-PASS opencsgtest/rotate_extrude_dxf-tests-actual.png opencsgtest/rotate_extrude_dxf-tests-expected.png
+FAIL opencsgtest/rotate_extrude_dxf-tests-actual.png opencsgtest/rotate_extrude_dxf-tests-expected.png
 PASS opencsgtest/rotate_extrude-tests-actual.png opencsgtest/rotate_extrude-tests-expected.png
 PASS opencsgtest/rounded_box-actual.png opencsgtest/rounded_box-expected.png
 PASS opencsgtest/scale2D-tests-actual.png opencsgtest/scale2D-tests-expected.png
@@ -370,22 +370,32 @@ fi
 total_tests=0
 num_tests_failed=0
 
-rm fails/*
+# ./fails holds the 'difference images' created by Yee's algorithm.
+# (difference image: black areas = match, red areas = mismatch.
+if [ ! -e fails ]; then
+	mkdir fails
+fi
+rm ./fails/*
+
+brightred="\033[40;31m"
+gray="\033[40;37m"
+nocolor="\033[0m"
 
 # Run all tests.
 while read expectedResult image1 image2 ; do
-	#if $pdiff --verbose --maxlevels 2 --luminanceonly $image1 $image2  2>&1 | grep -q "^$expectedResult" ; then
-	if $pdiff --verbose --maxlevels 2 --luminanceonly $image1 $image2 --output testout.png 2>&1 | grep -q "^$expectedResult" ; then
+	#if $pdiff $image1 $image2  2>&1 | grep -q "^$expectedResult" ; then
+	if $pdiff $image1 $image2 --colorfactor 0.1 --output testout.png 2>&1 | grep -q "^$expectedResult" ; then
 		total_tests=$((total_tests+1))
 	else
 		num_tests_failed=$((num_tests_failed+1))
-		echo "Regression failure: expected $expectedResult for \"$pdiff $image1 $image2\"" >&2
+		echo -e $brightred "Regression failure: expected $expectedResult for \"$pdiff $image1 $image2\"" >&2
 		if [ -e testout.png ] ; then
 			savename=`echo $image1`
 			savename=`echo $savename | sed s/\\\\///g -`
-			echo mv testout.png testfails/$savename
-			mv testout.png testfails/$savename
+			echo mv testout.png fails/$savename
+			mv testout.png fails/$savename
 		fi
+		echo -e $nocolor
 	fi
 done <<EOF
 $(all_tests)

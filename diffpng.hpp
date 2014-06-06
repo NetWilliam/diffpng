@@ -230,17 +230,16 @@ static const auto usage = "Usage: diffpng image1 image2\n\
 Compares image1 and image2 using a perceptually based image metric.\n\
 \n\
 Options:\n\
- --verbose	Turns on verbose mode\n\
- --fov deg	Field of view in degrees (0.1 to 89.9)\n\
+ --fov deg	 Field of view in degrees (0.1 to 89.9)\n\
  --threshold p   # of pixels p below which differences are ignored\n\
- --gamma g	Value to convert rgb into linear space (default 2.2)\n\
+ --gamma g	 Value to convert rgb into linear space (default 2.2)\n\
  --luminance l   White luminance (default 100.0 cdm^-2)\n\
  --luminanceonly Only consider luminance; ignore chroma (color) in the comparison\n\
  --colorfactor   How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
- --scale		Scale images to match each other's dimensions.\n\
- --sum-errors	Print a sum of the luminance and color differences.\n\
- --output o.ppm  Write difference to the file o.ppm\n\
- --maxlevels n   set the maximum number of Laplacian Pyramid Levels\n\
+ --sum-errors	 Print a sum of the luminance and color differences.\n\
+ --output o.png  Write difference image to o.png (black=same, red=differ)\n\
+ --maxlevels n   Set the initial maximum number of Laplacian Pyramid Levels\n\
+ --quiet         Turns off verbose mode\n\
 \n";
 
 
@@ -275,7 +274,7 @@ class CompareArgs
 public:
 	CompareArgs()
 	{
-		Verbose = false;
+		Verbose = true;
 		LuminanceOnly = false;
 		SumErrors = false;
 		FieldOfView = 45.0f;
@@ -283,7 +282,7 @@ public:
 		ThresholdPixels = 100;
 		Luminance = 100.0f;
 		ColorFactor = 1.0f;
-		MaxPyramidLevels = 8;
+		MaxPyramidLevels = 2;
 	}
 	bool Parse_Args(int argc, char **argv)
 	{
@@ -315,9 +314,9 @@ public:
 						FieldOfView = lexical_cast<float>(argv[i]);
 					}
 				}
-				else if (option_matches(argv[i], "verbose"))
+				else if (option_matches(argv[i], "quiet"))
 				{
-					Verbose = true;
+					Verbose = false;
 				}
 				else if (option_matches(argv[i], "threshold"))
 				{
@@ -344,6 +343,10 @@ public:
 					if (++i < argc)
 					{
 						MaxPyramidLevels = lexical_cast<int>(argv[i]);
+					}
+					if (MaxPyramidLevels<2 || MaxPyramidLevels>8) {
+						std::cout << "Error: MaxPyramidLevels must be between >1 and <9\n";
+						return false;
 					}
 				}
 				else if (option_matches(argv[i], "luminance"))
@@ -758,7 +761,7 @@ static unsigned int adaptation(float num_one_degree_pixels, unsigned int max_pyr
 }
 
 
-bool Yee_Compare(CompareArgs &args)
+bool Yee_Compare_Engine(CompareArgs &args)
 {
 	if ((args.ImgA->Get_Width() != args.ImgB->Get_Width())or(
 			args.ImgA->Get_Height() != args.ImgB->Get_Height()))
@@ -973,7 +976,7 @@ bool Yee_Compare(CompareArgs &args)
 	const std::string error_sum_buff = s.str();
 
 	s.str("");
-	s << pixels_failed << " error sum\n";
+	s << pixels_failed << " pixels failed\n";
 	const std::string different = s.str();
 
 	// Always output image difference if requested.
@@ -988,7 +991,7 @@ bool Yee_Compare(CompareArgs &args)
 
 	if (pixels_failed < args.ThresholdPixels)
 	{
-		args.ErrorStr = "Images are perceptually indistinguishable\n";
+		args.ErrorStr = "Images are roughly the same\n";
 		args.ErrorStr += different;
 		return true;
 	}
@@ -1001,6 +1004,59 @@ bool Yee_Compare(CompareArgs &args)
 	}
 
 	return false;
+}
+
+/*
+Multi-stage comparison.
+
+This is designed to run faster on sets of images that match (PASS) than
+on sets of images that fail (FAIL). The basic idea is as follows:
+
+When the number of Laplacian Pyramid Levels is low, the algorithm runs
+relatively fast. It can detect similar images well, but it also FAILS
+on images that should not fail. This is because it does not do enough 'blurring'.
+
+Thus, the strategy is as follows.
+
+Start with a low number of Pyramid Levels.... and if the images match, (PASS),
+then quit the algorithm.
+
+Now, only if the images dont match (FAIL) do we increase the number of
+pyramid levels.
+
+On a typical regression test system, this can create a good speedup. Why?
+Imagine you have 400 image tests. Under normal circumstances, your program
+will generate test-image output that matches the expected image output.
+Thus, most of the comparisons will be of images that will probably match.
+That means, this comparison will run relatively fast on all those matches.
+
+Now say you create an experimental new feature for your program, and
+want to see if it breaks anything. Well, the algorithm will stil run fast
+on the test-output that matches what is expected. . . . it will only slow
+down to do higher-levels of Pyramid processing for those few output images that
+dont match what is expected.
+
+Lets say your modification of your program causes 5 out of 400 tests to fail.
+That means only those 5 will run really slowly.
+
+Let's say that 'fast' means 2 seconds, and 'slow' means 20 seconds. We have
+thus taken some code that would have run in 400*20 seconds, 8000 (>2 hours)
+and made it run in only 395*2+5*20 seconds. Thats about 15 minutes, roughly
+ten times faster.
+*/
+
+bool LevelClimberCompare(CompareArgs &args) {
+	bool test = false;
+	test = Yee_Compare_Engine( args );
+	unsigned int FinalMaxLevels = 8;
+
+	while (test==false && args.MaxPyramidLevels<FinalMaxLevels) {
+		std::cout << "Test failed with Max # Pyramid Levels=" << args.MaxPyramidLevels;
+		args.MaxPyramidLevels++;
+		std::cout << ". Rerunning with " << args.MaxPyramidLevels << "\n";
+		test = Yee_Compare_Engine( args );
+	}
+	return test;
 }
 
 ////////////// metric
