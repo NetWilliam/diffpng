@@ -37,9 +37,9 @@ Permission is granted to anyone to use this software for any purpose,
 including commercial applications, and to alter it and redistribute it
 freely, subject to the following restrictions:
 
-    1. The origin of this software must not be misrepresented; you must not
-    claim that you wrote the original software. If you use this software
-    in a product, an acknowledgment in the product documentation would be
+	1. The origin of this software must not be misrepresented; you must not
+	claim that you wrote the original software. If you use this software
+	in a product, an acknowledgment in the product documentation would be
     appreciated but is not required.
 
     2. Altered source versions must be plainly marked as such, and must not be
@@ -58,34 +58,31 @@ LodePNG Examples
 
 
 
-/*
-To use this as a .cpp file, build as normal.
-To use it as an .hpp file header, uncomment the line
+// To use this file as a .hpp header file (no 'main()') uncomment the following
 
 // #define DIFFPNG_HEADERONLY
-
-to be
-
-#define DIFFPNG_HEADERONLY
-
-This will comment-out the 'main()' function and allow you to use this file
-as a 'header library' (assuming your project also uses lodepng)
-*/
-
-
-// #define DIFFPNG_HEADERONLY
-
 
 
 #ifndef DIFFPNG_HPP
 #define DIFFPNG_HPP
 
 #include "lodepng.h"
-#include <stdint.h>
+#include <assert.h>
+#include <cstdlib>
+#include <cassert>
+#include <cmath>
 #include <iostream>
 #include <memory>
+//#include <stdexcept>
+#include <stdint.h>
+#include <sstream>
 #include <string>
 #include <vector>
+
+namespace diffpng
+{
+
+using namespace std;
 
 /** Class encapsulating an image containing R,G,B,A channels.
  *
@@ -101,7 +98,7 @@ class RGBAImage
 	RGBAImage &operator=(const RGBAImage &);
 
 public:
-	RGBAImage(unsigned int w, unsigned int h, const std::string &name="")
+	RGBAImage(unsigned int w, unsigned int h, const string &name="")
 		: Width(w), Height(h), Name(name), Data(w * h)
 	{
 	}
@@ -146,7 +143,7 @@ public:
 	{
 		return Data[i];
 	}
-	const std::string &Get_Name() const
+	const string &Get_Name() const
 	{
 		return Name;
 	}
@@ -159,12 +156,12 @@ public:
 		return &Data[0];
 	}
 
-	void WriteToFile(const std::string &filename) const
+	void WriteToFile(const string &filename) const
 	{
-		std::cout << "WriteToFile:" << filename << "\n";
+		cout << "WriteToFile:" << filename << "\n";
 
 		unsigned width = this->Width, height = this->Height;
-		std::vector<unsigned char> image;
+		vector<unsigned char> image;
 		image.resize(width * height * 4);
 		for(unsigned y = 0; y < height; y++) {
 		for(unsigned x = 0; x < width; x++) {
@@ -184,25 +181,25 @@ public:
 		//The image argument has width * height RGBA pixels or width * height * 4 bytes
 		unsigned error = lodepng::encode(filename.c_str(), image, width, height);
 
-		if(error) std::cout << "encoder error " << error << ": "<< lodepng_error_text(error) << std::endl;
+		if(error) cout << "encoder error " << error << ": "<< lodepng_error_text(error) << endl;
 	}
 
-	static std::shared_ptr<RGBAImage> ReadFromFile(const std::string &filename)
+	static RGBAImage *ReadFromFile(const string &filename)
 	{
-		std::cout << "reading from file:" << filename << "\n";
-		std::vector<unsigned char> lodepng_image; //the raw pixels
+		cout << "reading from file:" << filename << "\n";
+		vector<unsigned char> lodepng_image; //the raw pixels
 		unsigned width, height;
 		unsigned error = lodepng::decode(lodepng_image, width, height, filename.c_str());
 		if (error) {
-			std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
+			cout << "decoder error " << error << ": " << lodepng_error_text(error) << endl;
 			return NULL;
 		}
 
 		//the pixels are now in the vector "image", 4 bytes per pixel, 
 		//ordered RGBARGBA..., use it as texture, draw it, ...
-		std::cout << "width " << width << ", height " << height << "\n";
+		cout << "width " << width << ", height " << height << "\n";
 
-		std::shared_ptr<RGBAImage> rgbaimg( new RGBAImage(width,height,"newimage") );
+		RGBAImage *rgbaimg = new RGBAImage(width,height,"newimage");
 
 		for(unsigned y = 0; y < height; y += 1) {
 		for(unsigned x = 0; x < width; x += 1) {
@@ -218,8 +215,8 @@ public:
 private:
 	const unsigned int Width;
 	const unsigned int Height;
-	const std::string Name;
-	std::vector<unsigned int> Data;
+	const string Name;
+	vector<unsigned int> Data;
 };
 
 #endif
@@ -233,24 +230,16 @@ private:
 #define DIFFPNG_COMPARE_ARGS_H
 
 
-#include <memory>
-#include <string>
-#include <cstdlib>
-#include <cassert>
-#include <iostream>
-#include <stdexcept>
-#include <sstream>
-
-static const auto copyright =
+string copyright(
 	"diffpng version 2014,\n\
 based on PerceptualDiff Copyright (C) 2006 Yangli Hector Yee\n\
 diffpng and PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
-See the GPL page for details: http://www.gnu.org/copyleft/gpl.html\n\n";
+See the GPL page for details: http://www.gnu.org/copyleft/gpl.html\n\n");
 
 
-static const auto usage = "Usage: diffpng image1 image2\n\
+string usage("Usage: diffpng image1 image2\n\
 \n\
 Compares image1 and image2 using a perceptually based image metric.\n\
 \n\
@@ -265,26 +254,26 @@ Options:\n\
  --output o.png  Write difference image to o.png (black=same, red=differ)\n\
  --maxlevels n   Set the initial maximum number of Laplacian Pyramid Levels\n\
  --quiet         Turns off verbose mode\n\
-\n";
+\n");
 
 
 
 template <typename T>
-static T lexical_cast(const std::string &input)
+static T lexical_cast(const string &input)
 {
-	std::stringstream ss(input);
+	stringstream ss(input);
 	T output;
 	if (not (ss >> output))
 	{
-		throw std::invalid_argument("");
+		cout << "invalid_argument(""):" << input;
 	}
 	return output;
 }
 
 
-static bool option_matches(const char *arg, const std::string &option_name)
+static bool option_matches(const char *arg, const string &option_name)
 {
-	const auto string_arg = std::string(arg);
+	string string_arg(arg);
 
 	return (string_arg == "--" + option_name) or
 		   (string_arg == "-" + option_name);
@@ -315,25 +304,19 @@ public:
 	{
 		if (argc < 3)
 		{
-			std::stringstream ss;
+			stringstream ss;
 			ss << copyright;
 			ss << usage;
-			ss << "\n"
-			   << "OpenMP status";
-#ifdef _OPENMP
-			ss << "enabled\n";
-#else
-			ss << "disabled\n";
-#endif
+			ss << "\n";
 			ErrorStr = ss.str();
 			return false;
 		}
-		auto image_count = 0u;
+		unsigned image_count = 0u;
 		const char *output_file_name = NULL;
-		for (auto i = 1; i < argc; i++)
+		for (int i = 1; i < argc; i++)
 		{
-			try
-			{
+//			try
+//			{
 				if (option_matches(argv[i], "fov"))
 				{
 					if (++i < argc)
@@ -349,11 +332,11 @@ public:
 				{
 					if (++i < argc)
 					{
-						auto temporary = lexical_cast<int>(argv[i]);
+						int temporary = lexical_cast<int>(argv[i]);
 						if (temporary < 0)
 						{
-							throw std::invalid_argument(
-								"-threshold must be positive");
+							cout << " invalid_argument(" <<
+								"-threshold must be positive";
 						}
 						ThresholdPixels = static_cast<unsigned int>(temporary);
 					}
@@ -372,7 +355,7 @@ public:
 						MaxPyramidLevels = lexical_cast<int>(argv[i]);
 					}
 					if (MaxPyramidLevels<2 || MaxPyramidLevels>8) {
-						std::cout << "Error: MaxPyramidLevels must be between >1 and <9\n";
+						cout << "Error: MaxPyramidLevels must be between >1 and <9\n";
 						return false;
 					}
 				}
@@ -407,7 +390,7 @@ public:
 				}
 				else if (image_count < 2)
 				{
-					auto img = RGBAImage::ReadFromFile(argv[i]);
+					RGBAImage *img = RGBAImage::ReadFromFile(argv[i]);
 					if (not img)
 					{
 						ErrorStr = "FAILCannot open ";
@@ -430,26 +413,27 @@ public:
 				}
 				else if (option_matches(argv[i], "help"))
 				{
-					std::cout << usage;
+					cout << usage;
 					return false;
 				}
 				else
 				{
-					std::cerr << "Warningoption/file \"" << argv[i]
+					cerr << "Warningoption/file \"" << argv[i]
 						  << "\" ignored\n";
 				}
-			}
-			catch (const std::invalid_argument &exception)
+//			}
+/*			catch (const invalid_argument &exception)
 			{
-				std::string reason = "";
-				if (not std::string(exception.what()).empty())
+				string reason = "";
+				if (not string(exception.what()).empty())
 				{
-					reason = std::string("; ") + exception.what();
+					reason = string("; ") + exception.what();
 				}
-				std::cout << "Invalid argument (" << std::string(argv[i]) <<
+				cout << "Invalid argument (" << string(argv[i]) <<
 									 ") for " << argv[i - 1] << reason;
 				return false;
 			}
+*/
 		}
 
 		if (not ImgA or not ImgB)
@@ -460,15 +444,15 @@ public:
 
 		if (output_file_name)
 		{
-			ImgDiff.reset(new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(),
-										output_file_name));
+			ImgDiff = new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(),
+					output_file_name);
 		}
 		return true;
 	}
 
 	void Print_Args() const
 	{
-		std::cout << "Field of view is " << FieldOfView << " degrees\n"
+		cout << "Field of view is " << FieldOfView << " degrees\n"
 			  << "Threshold pixels is " << ThresholdPixels << " pixels\n"
 			  << "The Gamma is " << Gamma << "\n"
 			  << "The Display's luminance is " << Luminance
@@ -476,9 +460,9 @@ public:
 			  << "Max Laplacian Pyramid Levels is " << MaxPyramidLevels << "\n";
 	}
 
-	std::shared_ptr<RGBAImage> ImgA;	 // Image A
-	std::shared_ptr<RGBAImage> ImgB;	 // Image B
-	std::unique_ptr<RGBAImage> ImgDiff;  // Diff image
+	RGBAImage *ImgA;	 // Image A
+	RGBAImage *ImgB;	 // Image B
+	RGBAImage *ImgDiff;  // Diff image
 	bool Verbose;						// Print lots of text or not
 	bool LuminanceOnly;  // Only consider luminance; ignore chroma channels in
 						 // the
@@ -490,7 +474,7 @@ public:
 	float Gamma;		// The gamma to convert to linear color space
 	float Luminance;	// the display's luminance
 	unsigned int ThresholdPixels;  // How many pixels different to ignore
-	std::string ErrorStr;		  // Error string
+	string ErrorStr;		  // Error string
 
 	// How much color to use in the metric.
 	// 0.0 is the same as LuminanceOnly = true,
@@ -501,16 +485,16 @@ public:
 };
 
 
-class ParseException : public virtual std::invalid_argument
+/*class ParseException : public virtual invalid_argument
 {
 public:
 
-	ParseException(const std::string &message)
-		: std::invalid_argument(message)
+	ParseException(const string &message)
+		: invalid_argument(message)
 	{
 	}
 };
-
+*/
 #endif
 
 
@@ -522,16 +506,13 @@ public:
 #ifndef DIFFPNG_LPYRAMID_H
 #define DIFFPNG_LPYRAMID_H
 
-#include <vector>
-#include <cassert>
-
-static std::vector<float> Copy(const float *img,
+static vector<float> Copy(const float *img,
 							   const unsigned int width,
 							   const unsigned int height)
 {
-	const auto max = width * height;
-	std::vector<float> out(max);
-	for (auto i = 0u; i < max; i++)
+	const unsigned long max = width * height;
+	vector<float> out(max);
+	for (unsigned long i = 0u; i < max; i++)
 	{
 		out[i] = img[i];
 	}
@@ -548,7 +529,7 @@ public:
 		this->Levels.resize(MaxPyramidLevels);
 		// Make the Laplacian pyramid by successively
 		// copying the earlier levels and blurring them
-		for (auto i = 0u; i < maxlevels; i++)
+		for (unsigned i = 0u; i < maxlevels; i++)
 		{
 			if (i == 0 or width * height <= 1)
 			{
@@ -564,29 +545,29 @@ public:
 
 	float Get_Value(unsigned int x, unsigned int y, unsigned int level) const
 	{
-		const auto index = x + y * Width;
+		const size_t index = x + y * Width;
 		assert(level < MaxPyramidLevels);
 		return Levels[level][index];
 	}
 
 private:
 	// Convolves image b with the filter kernel and stores it in a.
-	void Convolve(std::vector<float> &a, const std::vector<float> &b) const
+	void Convolve(vector<float> &a, const vector<float> &b) const
 	{
 		assert(a.size() > 1);
 		assert(b.size() > 1);
 
 		const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
 //#pragma omp parallel for
-		for (auto y = 0u; y < Height; y++)
+		for (unsigned y = 0u; y < Height; y++)
 		{
-			for (auto x = 0u; x < Width; x++)
+			for (unsigned x = 0u; x < Width; x++)
 			{
-				auto index = y * Width + x;
+				size_t index = y * Width + x;
 				a[index] = 0.0f;
-				for (auto i = -2; i <= 2; i++)
+				for (int i = -2; i <= 2; i++)
 				{
-					for (auto j = -2; j <= 2; j++)
+					for (int j = -2; j <= 2; j++)
 					{
 						int nx = x + i;
 						int ny = y + j;
@@ -615,7 +596,7 @@ private:
 	}
 
 	// Successively blurred versions of the original image
-	std::vector< std::vector<float> > Levels;
+	vector< vector<float> > Levels;
 
 	unsigned int Width;
 	unsigned int Height;
@@ -644,12 +625,6 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <cmath>
-#include <iostream>
-#include <memory>
-#include <sstream>
-#include <assert.h>
-
 #ifndef M_PI
 #define M_PI 3.14159265f
 #endif
@@ -667,7 +642,7 @@ static float tvi(float adaptation_luminance)
 	// returns the threshold luminance given the adaptation luminance
 	// units are candelas per meter squared
 
-	const auto log_a = log10f(adaptation_luminance);
+	const float log_a = log10f(adaptation_luminance);
 
 	float r;
 	if (log_a < -3.94f)
@@ -699,8 +674,8 @@ static float tvi(float adaptation_luminance)
 // given the cycles per degree (cpd) and luminance (lum)
 static float csf(float cpd, float lum)
 {
-	const auto a = 440.f * powf((1.f + 0.7f / lum), -0.2f);
-	const auto b = 0.3f * powf((1.0f + 100.0f / lum), 0.15f);
+	const float a = 440.f * powf((1.f + 0.7f / lum), -0.2f);
+	const float b = 0.3f * powf((1.0f + 100.0f / lum), 0.15f);
 
 	return a * cpd * expf(-b * cpd) * sqrtf(1.0f + 0.06f * expf(b * cpd));
 }
@@ -712,8 +687,8 @@ static float csf(float cpd, float lum)
 */
 static float mask(float contrast)
 {
-	const auto a = powf(392.498f * contrast, 0.7f);
-	const auto b = powf(0.0153f * a, 4.f);
+	const float a = powf(392.498f * contrast, 0.7f);
+	const float b = powf(0.0153f * a, 4.f);
 	return powf(1.0f + b, 0.25f);
 }
 
@@ -773,9 +748,9 @@ static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 
 static unsigned int adaptation(float num_one_degree_pixels, unsigned int max_pyramid_levels)
 {
-	auto num_pixels = 1.f;
-	auto adaptation_level = 0u;
-	for (auto i = 0u; i < max_pyramid_levels; i++)
+	float num_pixels = 1.f;
+	unsigned adaptation_level = 0u;
+	for (unsigned i = 0u; i < max_pyramid_levels; i++)
 	{
 		adaptation_level = i;
 		if (num_pixels > num_one_degree_pixels)
@@ -797,9 +772,9 @@ bool Yee_Compare_Engine(CompareArgs &args)
 		return false;
 	}
 
-	const auto dim = args.ImgA->Get_Width() * args.ImgA->Get_Height();
-	auto identical = true;
-	for (auto i = 0u; i < dim; i++)
+	const unsigned dim = args.ImgA->Get_Width() * args.ImgA->Get_Height();
+	bool identical = true;
+	for (unsigned i = 0u; i < dim; i++)
 	{
 		if (args.ImgA->Get(i) != args.ImgB->Get(i))
 		{
@@ -809,40 +784,26 @@ bool Yee_Compare_Engine(CompareArgs &args)
 	}
 	if (identical)
 	{
-		std::cout << "Images are binary identical\n";
+		cout << "Images are binary identical\n";
 	}
 
 	// assuming colorspaces are in Adobe RGB (1998) convert to XYZ
-	auto aX = std::unique_ptr<float[]>(new float[dim]);
-	auto aY = std::unique_ptr<float[]>(new float[dim]);
-	auto aZ = std::unique_ptr<float[]>(new float[dim]);
-	auto bX = std::unique_ptr<float[]>(new float[dim]);
-	auto bY = std::unique_ptr<float[]>(new float[dim]);
-	auto bZ = std::unique_ptr<float[]>(new float[dim]);
-	auto aLum = std::unique_ptr<float[]>(new float[dim]);
-	auto bLum = std::unique_ptr<float[]>(new float[dim]);
+	vector<float> aX(dim),aY(dim),aZ(dim),bX(dim),bY(dim),bZ(dim);
+	vector<float> aLum(dim),bLum(dim),aA(dim),bA(dim),aB(dim),bB(dim);
 
-	auto aA = std::unique_ptr<float[]>(new float[dim]);
-	auto bA = std::unique_ptr<float[]>(new float[dim]);
-	auto aB = std::unique_ptr<float[]>(new float[dim]);
-	auto bB = std::unique_ptr<float[]>(new float[dim]);
+	if (args.Verbose) cout << "Converting RGB to XYZ\n";
 
-	if (args.Verbose)
-	{
-		std::cout << "Converting RGB to XYZ\n";
-	}
-
-	const auto w = args.ImgA->Get_Width();
-	const auto h = args.ImgA->Get_Height();
+	const unsigned w = args.ImgA->Get_Width();
+	const unsigned h = args.ImgA->Get_Height();
 //#pragma omp parallel for
-	for (auto y = 0u; y < h; y++)
+	for (unsigned y = 0u; y < h; y++)
 	{
-		for (auto x = 0u; x < w; x++)
+		for (unsigned x = 0u; x < w; x++)
 		{
-			const auto i = x + y * w;
-			auto r = powf(args.ImgA->Get_Red(i) / 255.0f, args.Gamma);
-			auto g = powf(args.ImgA->Get_Green(i) / 255.0f, args.Gamma);
-			auto b = powf(args.ImgA->Get_Blue(i) / 255.0f, args.Gamma);
+			const unsigned i = x + y * w;
+			float r = powf(args.ImgA->Get_Red(i) / 255.0f, args.Gamma);
+			float g = powf(args.ImgA->Get_Green(i) / 255.0f, args.Gamma);
+			float b = powf(args.ImgA->Get_Blue(i) / 255.0f, args.Gamma);
 			AdobeRGBToXYZ(r, g, b, aX[i], aY[i], aZ[i]);
 			float l;
 			XYZToLAB(aX[i], aY[i], aZ[i], l, aA[i], aB[i]);
@@ -858,59 +819,59 @@ bool Yee_Compare_Engine(CompareArgs &args)
 
 	if (args.Verbose)
 	{
-		std::cout << "Constructing Laplacian Pyramids\n";
+		cout << "Constructing Laplacian Pyramids\n";
 	}
 
-	const LPyramid la(aLum.get(), w, h, args.MaxPyramidLevels);
-	const LPyramid lb(bLum.get(), w, h, args.MaxPyramidLevels);
+	const LPyramid la(&aLum[0], w, h, args.MaxPyramidLevels);
+	const LPyramid lb(&bLum[0], w, h, args.MaxPyramidLevels);
 
-	const auto num_one_degree_pixels =
+	const float num_one_degree_pixels =
 		2.f * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
-	const auto pixels_per_degree = w / num_one_degree_pixels;
+	const float pixels_per_degree = w / num_one_degree_pixels;
 
 	if (args.Verbose)
 	{
-		std::cout << "Performing test\n";
+		cout << "Performing test\n";
 	}
 
-	const auto adaptation_level = adaptation(num_one_degree_pixels, args.MaxPyramidLevels);
+	const unsigned adaptation_level = adaptation(num_one_degree_pixels, args.MaxPyramidLevels);
 
-	std::vector<float> cpd(args.MaxPyramidLevels);
+	vector<float> cpd(args.MaxPyramidLevels);
 	cpd[0] = 0.5f * pixels_per_degree;
-	for (auto i = 1u; i < args.MaxPyramidLevels; i++)
+	for (unsigned i = 1u; i < args.MaxPyramidLevels; i++)
 	{
 		cpd[i] = 0.5f * cpd[i - 1];
 	}
-	const auto csf_max = csf(3.248f, 100.0f);
+	const float csf_max = csf(3.248f, 100.0f);
 
-	assert(args.MaxPyramidLevels > 2);
+	assert(args.MaxPyramidLevels >= 2); // ?? >2 or >=2
 
 	float F_freq[args.MaxPyramidLevels - 2];
-	for (auto i = 0u; i < args.MaxPyramidLevels - 2; i++)
+	for (unsigned i = 0u; i < args.MaxPyramidLevels - 2; i++)
 	{
 		F_freq[i] = csf_max / csf(cpd[i], 100.0f);
 	}
 
-	auto pixels_failed = 0u;
-	auto error_sum = 0.;
+	unsigned pixels_failed = 0u;
+	float error_sum = 0.;
 //#pragma omp parallel for reduction(+ : pixels_failed) reduction(+ : error_sum)
-	for (auto y = 0u; y < h; y++)
+	for (unsigned y = 0u; y < h; y++)
 	{
-		for (auto x = 0u; x < w; x++)
+		for (unsigned x = 0u; x < w; x++)
 		{
-			const auto index = x + y * w;
+			const unsigned index = x + y * w;
 			float contrast[args.MaxPyramidLevels - 2];
 			float sum_contrast = 0;
-			for (auto i = 0u; i < args.MaxPyramidLevels - 2; i++)
+			for (unsigned i = 0u; i < args.MaxPyramidLevels - 2; i++)
 			{
-				auto n1 =
+				float n1 =
 					fabsf(la.Get_Value(x, y, i) - la.Get_Value(x, y, i + 1));
-				auto n2 =
+				float n2 =
 					fabsf(lb.Get_Value(x, y, i) - lb.Get_Value(x, y, i + 1));
-				auto numerator = (n1 > n2) ? n1 : n2;
-				auto d1 = fabsf(la.Get_Value(x, y, i + 2));
-				auto d2 = fabsf(lb.Get_Value(x, y, i + 2));
-				auto denominator = (d1 > d2) ? d1 : d2;
+				float numerator = (n1 > n2) ? n1 : n2;
+				float d1 = fabsf(la.Get_Value(x, y, i + 2));
+				float d2 = fabsf(lb.Get_Value(x, y, i + 2));
+				float denominator = (d1 > d2) ? d1 : d2;
 				if (denominator < 1e-5f)
 				{
 					denominator = 1e-5f;
@@ -923,19 +884,19 @@ bool Yee_Compare_Engine(CompareArgs &args)
 				sum_contrast = 1e-5f;
 			}
 			float F_mask[args.MaxPyramidLevels - 2];
-			auto adapt = la.Get_Value(x, y, adaptation_level) +
+			float adapt = la.Get_Value(x, y, adaptation_level) +
 						 lb.Get_Value(x, y, adaptation_level);
 			adapt *= 0.5f;
 			if (adapt < 1e-5)
 			{
 				adapt = 1e-5f;
 			}
-			for (auto i = 0u; i < args.MaxPyramidLevels - 2; i++)
+			for (unsigned i = 0u; i < args.MaxPyramidLevels - 2; i++)
 			{
 				F_mask[i] = mask(contrast[i] * csf(cpd[i], adapt));
 			}
-			auto factor = 0.f;
-			for (auto i = 0u; i < args.MaxPyramidLevels - 2; i++)
+			float factor = 0.f;
+			for (unsigned i = 0u; i < args.MaxPyramidLevels - 2; i++)
 			{
 				factor += contrast[i] * F_freq[i] * F_mask[i] / sum_contrast;
 			}
@@ -947,10 +908,10 @@ bool Yee_Compare_Engine(CompareArgs &args)
 			{
 				factor = 10;
 			}
-			const auto delta =
+			const float delta =
 				fabsf(la.Get_Value(x, y, 0) - lb.Get_Value(x, y, 0));
 			error_sum += delta;
-			auto pass = true;
+			bool pass = true;
 
 			// pure luminance test
 			if (delta > factor * tvi(adapt))
@@ -961,18 +922,18 @@ bool Yee_Compare_Engine(CompareArgs &args)
 			if (not args.LuminanceOnly)
 			{
 				// CIE delta E test with modifications
-				auto color_scale = args.ColorFactor;
+				float color_scale = args.ColorFactor;
 				// ramp down the color test in scotopic regions
 				if (adapt < 10.0f)
 				{
 					// Don't do color test at all.
 					color_scale = 0.0;
 				}
-				auto da = aA[index] - bA[index];
-				auto db = aB[index] - bB[index];
+				float da = aA[index] - bA[index];
+				float db = aB[index] - bB[index];
 				da = da * da;
 				db = db * db;
-				const auto delta_e = (da + db) * color_scale;
+				const float delta_e = (da + db) * color_scale;
 				error_sum += delta_e;
 				if (delta_e > factor)
 				{
@@ -998,13 +959,13 @@ bool Yee_Compare_Engine(CompareArgs &args)
 		}
 	}
 
-	std::stringstream s;
+	stringstream s;
 	s << error_sum << " error sum\n";
-	const std::string error_sum_buff = s.str();
+	const string error_sum_buff = s.str();
 
 	s.str("");
 	s << pixels_failed << " pixels failed\n";
-	const std::string different = s.str();
+	const string different = s.str();
 
 	// Always output image difference if requested.
 	if (args.ImgDiff)
@@ -1075,12 +1036,13 @@ ten times faster.
 bool LevelClimberCompare(CompareArgs &args) {
 	bool test = false;
 	test = Yee_Compare_Engine( args );
-	unsigned int FinalMaxLevels = 8;
+//	unsigned int FinalMaxLevels = 8;
+	unsigned int FinalMaxLevels = 4;
 
 	while (test==false && args.MaxPyramidLevels<FinalMaxLevels) {
-		std::cout << "Test failed with Max # Pyramid Levels=" << args.MaxPyramidLevels;
+		cout << "Test failed with Max # Pyramid Levels=" << args.MaxPyramidLevels;
 		args.MaxPyramidLevels++;
-		std::cout << ". Rerunning with " << args.MaxPyramidLevels << "\n";
+		cout << ". Rerunning with " << args.MaxPyramidLevels << "\n";
 		test = Yee_Compare_Engine( args );
 	}
 	return test;
@@ -1088,6 +1050,7 @@ bool LevelClimberCompare(CompareArgs &args) {
 
 ////////////// metric
 
+} // namespace diffpng
 
 #ifndef DIFFPNG_HEADERONLY
 
@@ -1096,43 +1059,52 @@ bool LevelClimberCompare(CompareArgs &args) {
 
 int main(int argc, char **argv)
 {
-    CompareArgs args;
+	diffpng::CompareArgs args;
 
-    try
-    {
-        if (not args.Parse_Args(argc, argv))
-        {
-            std::cout << args.ErrorStr;
-            return -1;
-        }
-        else
-        {
-            if (args.Verbose)
-            {
-                args.Print_Args();
-            }
-        }
+	std::string red("\033[40;31m");
+	std::string green("\033[40;32m");
+	std::string nocolor("\033[0m");
 
-        bool passed = LevelClimberCompare(args);
-        if (passed)
-        {
-            if (args.Verbose)
-            {
-                std::cout << "PASS: " << args.ErrorStr;
-            }
-        }
-        else
-        {
-            std::cout << "FAIL: " << args.ErrorStr;
-        }
+//	try
+//	{
+		if (not args.Parse_Args(argc, argv))
+		{
+			std::cout << args.ErrorStr;
+			return -1;
+		}
+		else
+		{
+			if (args.Verbose)
+			{
+				args.Print_Args();
+			}
+		}
 
-        return passed ? 0 : 1;
-    }
-    catch (...)
-    {
-        std::cerr << "Exception" << std::endl;
-        return 1;
-    }
+		bool passed = diffpng::LevelClimberCompare(args);
+		if (passed)
+		{
+			if (args.Verbose)
+			{
+				std::cout << green;
+				std::cout << "PASS: " << args.ErrorStr;
+				std::cout << nocolor;
+			}
+		}
+		else
+		{
+			std::cout << red;
+			std::cout << "FAIL: " << args.ErrorStr;
+			std::cout << nocolor;
+		}
+
+		return passed ? 0 : 1;
+//	}
+/*	catch (...)
+	{
+		std::cerr << "Exception" << std::endl;
+		return 1;
+	}
+*/
 }
 
 #endif // ifndef HEADERONLY
