@@ -36,10 +36,10 @@ in another program.
 
 Executable:
 
-    Get Cmake (http://www.cmake.org)
-    mkdir bin && cd bin && cmake .. && make
-    cd ../test && ./run_tests.bash && cd .. # run regression tests
-    cp bin/diffpng /wherever/you/want
+    # Get Cmake (http://www.cmake.org)
+    mkdir bin && cd bin && cmake ..
+    ctest # run regression tests
+    cp ./diffpng /wherever/you/want
 
 As header:
 
