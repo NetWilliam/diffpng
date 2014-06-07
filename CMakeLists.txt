@@ -373,7 +373,7 @@ set(testlines
 )
 
 # store our --output generated 'difference' images.
-file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/diffimages")
+file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/imagediffs")
 
 set(counter ".")
 foreach(testline ${testlines})
@@ -400,7 +400,7 @@ foreach(testline ${testlines})
     set(fliparg "")
   endif()
 
-  set(diffimg "${PROJECT_BINARY_DIR}/diffimages/${testname}.png")
+  set(diffimg "${PROJECT_BINARY_DIR}/imagediffs/${testname}.png")
   add_test(NAME ${testname} COMMAND "${PROJECT_BINARY_DIR}/diffpng" "${img1}" "${img2}" ${fliparg} "--output" "${diffimg}")
   set(counter "${counter}.")
 
