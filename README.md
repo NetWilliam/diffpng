@@ -2,7 +2,7 @@
 
 Compare two .png image files based on Hector Yee's PerceptualDiff algorithm
 
-"Perceptual Metric for Production Testing", 2004/1/1, Journal of Graphics Tools
+Based on his paper "Perceptual Metric for Production Testing", 2004/1/1, Journal of Graphics Tools
 
 ###hows it work?
 
@@ -28,6 +28,35 @@ The resulting diff.png looks like this: (black=same, red=difference)
 
 ![diffpng result](/test/basic/diffpng_example.png "diffpng example")
 
+###build & install
+
+diffpng consists of a single file, diffpng.cpp. It can be used by
+itself to generate an executable, or it can be used as a header file
+in another program.
+
+Executable:
+
+    Get Cmake (http://www.cmake.org)
+    mkdir bin && cd bin && cmake .. && make
+    cd ../test && ./run_tests.bash && cd .. # run regression tests
+    cp bin/diffpng /wherever/you/want
+
+As header:
+
+Imagine you have a program 'myprogram.cpp'. Put these two lines at the top.
+
+    #define DIFFPNG_HEADERONLY
+    #include "diffpng.cpp"
+
+Now call diffpng using the same method used in main() at the bottom of the file.
+(Note your program will also need lodepng)
+
+###usage
+
+    diffpng image1.png image2.png --output diff.png
+
+    for other options, run diffpng --help
+
 ###license
 
 * Copyright (C) 2006-2011 Yangli Hector Yee (PerceptualDiff)
@@ -44,19 +73,6 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details in the
 file LICENSE
 
-###build & install
-
-    Get Cmake (http://www.cmake.org)
-    mkdir bin && cd bin && cmake .. && make
-    cd ../test && ./run_tests.bash && cd .. # run regression tests
-    cp bin/diffpng /wherever/you/want
-
-###usage
-
-    diffpng image1.png image2.png --output diff.png
-
-    for other options, run diffpng --help
-
 ###design philosophy
 
 1. simple
@@ -67,16 +83,11 @@ file LICENSE
 
 practical effects of philosophy:
 
-1. use very plain C++. no exceptions, pointers, stdc++0, no 'auto'
-   complicated templates, & other completely unnecessary over-complicated BS.
-   '0u' = 0, static const auto=>std::string(), remove unnecessary const, etc.
-   remove unnecessary 'static', change unsigned char to uint8_t, etc etc.
-   vectors use size_t indexes, remove get/set. more Go & Python, less Java.
-   stop trying to optimize things the compiler can optimize. (& for all params?)
-2. as few files as possible (four.. can it be less?)
+1. use very plain C++, in the style of python or Go. 
+   avoid exceptions, pointers, stdc++0, 'auto', etc.
+2. as few files as possible (one, plus two for lodepng)
 3. make default settings so it 'just works' for most ordinary situations
 4. regression test images take up several megabytes (under test/ dir)
-5. use well defined bit widths (uint64, uint32).
 
 ###todo
 

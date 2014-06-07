@@ -384,7 +384,7 @@ nocolor="\033[0m"
 # Run all tests.
 while read expectedResult image1 image2 ; do
 	#if $pdiff $image1 $image2  2>&1 | grep -q "^$expectedResult" ; then
-	if $pdiff $image1 $image2 --colorfactor 0.1 --output testout.png 2>&1 | grep -q "^$expectedResult" ; then
+	if $pdiff $image1 $image2 --colorfactor 0.1 --output testout.png 2>&1 | grep -q "$expectedResult": ; then
 		total_tests=$((total_tests+1))
 	else
 		num_tests_failed=$((num_tests_failed+1))

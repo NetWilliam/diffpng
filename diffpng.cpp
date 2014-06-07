@@ -1,5 +1,5 @@
 /*
-diffpng - a program that compares two images using a perceptual metric
+diffpng - a program that compares two images
 
 based on the paper :
 A perceptual metric for production testing. Journal of graphics tools,
@@ -7,7 +7,7 @@ A perceptual metric for production testing. Journal of graphics tools,
 
 Copyright (C) 2006-2011 Yangli Hector Yee
 Copyright (C) 2011-2014 Steven Myint
-(This entire file was rewritten by Jim Tilander)
+(Some of this file was rewritten by Jim Tilander)
 Copyright (C) 2014 Don Bright
 
 This program is free software; you can redistribute it and/or modify it under
@@ -37,9 +37,9 @@ Permission is granted to anyone to use this software for any purpose,
 including commercial applications, and to alter it and redistribute it
 freely, subject to the following restrictions:
 
-	1. The origin of this software must not be misrepresented; you must not
-	claim that you wrote the original software. If you use this software
-	in a product, an acknowledgment in the product documentation would be
+    1. The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
     appreciated but is not required.
 
     2. Altered source versions must be plainly marked as such, and must not be
@@ -51,16 +51,14 @@ freely, subject to the following restrictions:
 
 /*
 
-This source has been heavily modified from both PerceptualDiff and
+This source has been modified from both PerceptualDiff and
 LodePNG Examples
 
 */
 
 
-
-// To use this file as a .hpp header file (no 'main()') uncomment the following
-
-// #define DIFFPNG_HEADERONLY
+// To use this file as a .hpp header file, uncomment the following
+//#define DIFFPNG_HEADERONLY
 
 
 #ifndef DIFFPNG_HPP
@@ -72,8 +70,6 @@ LodePNG Examples
 #include <cassert>
 #include <cmath>
 #include <iostream>
-#include <memory>
-//#include <stdexcept>
 #include <stdint.h>
 #include <sstream>
 #include <string>
@@ -219,16 +215,12 @@ private:
 	vector<unsigned int> Data;
 };
 
-#endif
 
 
 
 /*
 --------------------------------------Compare Args
 */
-#ifndef DIFFPNG_COMPARE_ARGS_H
-#define DIFFPNG_COMPARE_ARGS_H
-
 
 string copyright(
 	"diffpng version 2014,\n\
@@ -241,7 +233,8 @@ See the GPL page for details: http://www.gnu.org/copyleft/gpl.html\n\n");
 
 string usage("Usage: diffpng image1 image2\n\
 \n\
-Compares image1 and image2 using a perceptually based image metric.\n\
+Compares image1 and image2 using Yee's perceptually based image metric.\n\
+Returns 0 on PASS (perceptually similar), 1 on FAIL (perceptually different)\n\
 \n\
 Options:\n\
  --fov deg	 Field of view in degrees (0.1 to 89.9)\n\
@@ -252,7 +245,9 @@ Options:\n\
  --colorfactor   How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
  --sum-errors	 Print a sum of the luminance and color differences.\n\
  --output o.png  Write difference image to o.png (black=same, red=differ)\n\
- --maxlevels n   Set the initial maximum number of Laplacian Pyramid Levels\n\
+ --initmax n     Set the initial maximum number of Laplacian Pyramid Levels\n\
+ --finalmax n    Set the final maximum number of Laplacian Pyramid Levels\n\
+ --flipexit      Flip the normal return values: PASS returns 1, FAIL returns 0\n\
  --quiet         Turns off verbose mode\n\
 \n");
 
@@ -299,6 +294,8 @@ public:
 		Luminance = 100.0f;
 		ColorFactor = 0.1f;
 		MaxPyramidLevels = 2;
+		FinalMaxPyramidLevels = 5;
+		FlipExit = false;
 	}
 	bool Parse_Args(int argc, char **argv)
 	{
@@ -328,6 +325,10 @@ public:
 				{
 					Verbose = false;
 				}
+				else if (option_matches(argv[i], "flipexit"))
+				{
+					FlipExit = true;
+				}
 				else if (option_matches(argv[i], "threshold"))
 				{
 					if (++i < argc)
@@ -348,7 +349,7 @@ public:
 						Gamma = lexical_cast<float>(argv[i]);
 					}
 				}
-				else if (option_matches(argv[i], "maxlevels"))
+				else if (option_matches(argv[i], "initmax"))
 				{
 					if (++i < argc)
 					{
@@ -356,6 +357,17 @@ public:
 					}
 					if (MaxPyramidLevels<2 || MaxPyramidLevels>8) {
 						cout << "Error: MaxPyramidLevels must be between >1 and <9\n";
+						return false;
+					}
+				}
+				else if (option_matches(argv[i], "finalmax"))
+				{
+					if (++i < argc)
+					{
+						FinalMaxPyramidLevels = lexical_cast<int>(argv[i]);
+					}
+					if (FinalMaxPyramidLevels<2 || FinalMaxPyramidLevels>8) {
+						cout << "Error: FinalMaxPyramidLevels must be between >1 and <9\n";
 						return false;
 					}
 				}
@@ -457,12 +469,14 @@ public:
 			  << "The Gamma is " << Gamma << "\n"
 			  << "The Display's luminance is " << Luminance
 			  << " candela per meter squared\n"
-			  << "Max Laplacian Pyramid Levels is " << MaxPyramidLevels << "\n";
+			  << "The Color Factor is " << ColorFactor << "\n"
+			  << "Initial Max Laplacian Pyramid Levels is " << MaxPyramidLevels << "\n"
+			  << "Final Max Laplacian Pyramid Levels is " << FinalMaxPyramidLevels << "\n";
 	}
 
-	RGBAImage *ImgA;	 // Image A
-	RGBAImage *ImgB;	 // Image B
-	RGBAImage *ImgDiff;  // Diff image
+	RGBAImage *ImgA=NULL;	 // Image A
+	RGBAImage *ImgB=NULL;	 // Image B
+	RGBAImage *ImgDiff=NULL;  // Diff image
 	bool Verbose;						// Print lots of text or not
 	bool LuminanceOnly;  // Only consider luminance; ignore chroma channels in
 						 // the
@@ -481,7 +495,15 @@ public:
 	// 1.0 means full strength.
 	float ColorFactor;
 
+	// normally we return 0 on PASS, 1 on FAIL. this can flip it.
+	bool FlipExit;
+
+	// Fewer Max Pyramid Levels makes it run faster, but will return
+	// false FAILs. We 'climb' from a low number, and only go higher
+	// if there is a FAIL... to further verify the FAIL.
+	// This allows PASS to run relatively fast.
 	unsigned int MaxPyramidLevels;
+	unsigned int FinalMaxPyramidLevels;
 };
 
 
@@ -495,7 +517,6 @@ public:
 	}
 };
 */
-#endif
 
 
 /*
@@ -503,8 +524,6 @@ public:
 ------------------------------- Laplacian Pyramid
 
 */
-#ifndef DIFFPNG_LPYRAMID_H
-#define DIFFPNG_LPYRAMID_H
 
 static vector<float> Copy(const float *img,
 							   const unsigned int width,
@@ -601,9 +620,7 @@ private:
 	unsigned int Width;
 	unsigned int Height;
 	unsigned int MaxPyramidLevels;
-};
-
-#endif
+}; //LPyramid
 
 
 /*
@@ -640,7 +657,7 @@ class CompareArgs;
 static float tvi(float adaptation_luminance)
 {
 	// returns the threshold luminance given the adaptation luminance
-	// units are candelas per meter squared
+// units are candelas per meter squared
 
 	const float log_a = log10f(adaptation_luminance);
 
@@ -1036,10 +1053,8 @@ ten times faster.
 bool LevelClimberCompare(CompareArgs &args) {
 	bool test = false;
 	test = Yee_Compare_Engine( args );
-//	unsigned int FinalMaxLevels = 8;
-	unsigned int FinalMaxLevels = 4;
 
-	while (test==false && args.MaxPyramidLevels<FinalMaxLevels) {
+	while (test==false && args.MaxPyramidLevels<args.FinalMaxPyramidLevels) {
 		cout << "Test failed with Max # Pyramid Levels=" << args.MaxPyramidLevels;
 		args.MaxPyramidLevels++;
 		cout << ". Rerunning with " << args.MaxPyramidLevels << "\n";
@@ -1047,6 +1062,8 @@ bool LevelClimberCompare(CompareArgs &args) {
 	}
 	return test;
 }
+
+#endif // DIFFPNG_HPP
 
 ////////////// metric
 
@@ -1056,6 +1073,12 @@ bool LevelClimberCompare(CompareArgs &args) {
 
 // main() is only used for 'cpp' compile mode. to build as .hpp header file
 // see the comment at the top of this file.
+
+// is this program running inside a script or from the console?
+bool interactive()
+{
+	return false;
+}
 
 int main(int argc, char **argv)
 {
@@ -1085,19 +1108,21 @@ int main(int argc, char **argv)
 		{
 			if (args.Verbose)
 			{
-				std::cout << green;
+				if (interactive()) std::cout << green;
 				std::cout << "PASS: " << args.ErrorStr;
-				std::cout << nocolor;
+				if (interactive()) std::cout << nocolor;
 			}
 		}
 		else
 		{
-			std::cout << red;
+			if (interactive()) std::cout << red;
 			std::cout << "FAIL: " << args.ErrorStr;
-			std::cout << nocolor;
+			if (interactive()) std::cout << nocolor;
 		}
 
-		return passed ? 0 : 1;
+	if (args.FlipExit) passed = !passed;
+	if (passed) return 0;
+	return 1;
 //	}
 /*	catch (...)
 	{
