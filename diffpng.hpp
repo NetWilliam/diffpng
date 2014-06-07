@@ -1,6 +1,10 @@
-
 /*
-RGBAImage.hpp
+diffpng - a program that compares two images using a perceptual metric
+
+based on the paper :
+A perceptual metric for production testing. Journal of graphics tools,
+9(4):33-40, 2004, Hector Yee
+
 Copyright (C) 2006-2011 Yangli Hector Yee
 Copyright (C) 2011-2014 Steven Myint
 (This entire file was rewritten by Jim Tilander)
@@ -18,13 +22,6 @@ PARTICULAR PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
-*/
-
-
-/*
-
-This source has been heavily modified from both PerceptualDiff and LodePNG Examples
-
 */
 
 /*
@@ -52,8 +49,36 @@ freely, subject to the following restrictions:
     distribution.
 */
 
-#ifndef DIFFPNG_RGBA_IMAGE_H
-#define DIFFPNG_RGBA_IMAGE_H
+/*
+
+This source has been heavily modified from both PerceptualDiff and
+LodePNG Examples
+
+*/
+
+
+
+/*
+To use this as a .cpp file, build as normal.
+To use it as an .hpp file header, uncomment the line
+
+// #define DIFFPNG_HEADERONLY
+
+to be
+
+#define DIFFPNG_HEADERONLY
+
+This will comment-out the 'main()' function and allow you to use this file
+as a 'header library' (assuming your project also uses lodepng)
+*/
+
+
+// #define DIFFPNG_HEADERONLY
+
+
+
+#ifndef DIFFPNG_HPP
+#define DIFFPNG_HPP
 
 #include "lodepng.h"
 #include <stdint.h>
@@ -1062,3 +1087,53 @@ bool LevelClimberCompare(CompareArgs &args) {
 }
 
 ////////////// metric
+
+
+#ifndef DIFFPNG_HEADERONLY
+
+// main() is only used for 'cpp' compile mode. to build as .hpp header file
+// see the comment at the top of this file.
+
+int main(int argc, char **argv)
+{
+    CompareArgs args;
+
+    try
+    {
+        if (not args.Parse_Args(argc, argv))
+        {
+            std::cout << args.ErrorStr;
+            return -1;
+        }
+        else
+        {
+            if (args.Verbose)
+            {
+                args.Print_Args();
+            }
+        }
+
+        bool passed = LevelClimberCompare(args);
+        if (passed)
+        {
+            if (args.Verbose)
+            {
+                std::cout << "PASS: " << args.ErrorStr;
+            }
+        }
+        else
+        {
+            std::cout << "FAIL: " << args.ErrorStr;
+        }
+
+        return passed ? 0 : 1;
+    }
+    catch (...)
+    {
+        std::cerr << "Exception" << std::endl;
+        return 1;
+    }
+}
+
+#endif // ifndef HEADERONLY
+

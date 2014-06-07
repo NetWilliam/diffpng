@@ -67,10 +67,16 @@ file LICENSE
 
 practical effects of philosophy:
 
-1. use very plain C++. no exceptions. no pointers.
+1. use very plain C++. no exceptions, pointers, stdc++0, no 'auto'
+   complicated templates, & other completely unnecessary over-complicated BS.
+   '0u' = 0, static const auto=>std::string(), remove unnecessary const, etc.
+   remove unnecessary 'static', change unsigned char to uint8_t, etc etc.
+   vectors use size_t indexes, remove get/set. more Go & Python, less Java.
+   stop trying to optimize things the compiler can optimize. (& for all params?)
 2. as few files as possible (four.. can it be less?)
 3. make default settings so it 'just works' for most ordinary situations
 4. regression test images take up several megabytes (under test/ dir)
+5. use well defined bit widths (uint64, uint32).
 
 ###todo
 
