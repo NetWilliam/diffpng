@@ -233,8 +233,6 @@ public:
 		for (unsigned i=0;i<newimg.Data.size();i++) {
 			Data[i] = newimg.Data[i];
 		}
-		std::cout << "upsample. writing out\n";
-		this->WriteToFile(Name+"upsample.png");
 	}
 
 	// make the image half its original size.
@@ -280,8 +278,6 @@ public:
 		for (unsigned i=0;i<newimg.Data.size();i++) {
 			Data[i] = newimg.Data[i];
 		}
-		std::cout << "downsample. writing out\n";
-		this->WriteToFile(Name+"downsample.png");
 	}
 
 	// this somewhat resembles antialiasing.
@@ -313,8 +309,6 @@ public:
 			this->Set( redavg, greenavg, blueavg, alphaavg, y*Width+x );
 		}
 		}
-		std::cout << "Simple Blur. writing out\n";
-		this->WriteToFile(Name+"simpleblur.png");
 	}
 private:
 	unsigned int Width;
@@ -402,7 +396,8 @@ public:
 		Luminance = 100.0f;
 		ColorFactor = 0.1f;
 		MaxPyramidLevels = 2;
-		FinalMaxPyramidLevels = 5;
+		//FinalMaxPyramidLevels = 5;
+		FinalMaxPyramidLevels = 3;
 		FlipExit = false;
 	}
 	bool Parse_Args(int argc, char **argv)
@@ -1178,14 +1173,21 @@ bool LevelClimberCompare(CompareArgs &args) {
 //		args.ImgB->UpSample();
 		args.ImgA->DownSample();
 		args.ImgB->DownSample();
-		if (args.ImgDiff) args.ImgDiff->DownSample();
-
+		if (args.ImgDiff) {
+			args.ImgA->WriteToFile( args.ImgDiff->Get_Name()+"downsample.png" );
+			args.ImgB->WriteToFile( args.ImgDiff->Get_Name()+"downsample.png" );
+			args.ImgDiff->DownSample();
+		}
 
 		for (int i=0;i<2;i++){
 			args.ImgA->SimpleBlur();
 			args.ImgB->SimpleBlur();
 		}
 
+		if (args.ImgDiff) {
+			args.ImgA->WriteToFile( args.ImgDiff->Get_Name()+"simpleblur.png" );
+			args.ImgB->WriteToFile( args.ImgDiff->Get_Name()+"simpleblur.png" );
+		}
 
 		args.ColorFactor = 0.05;
 		test = Yee_Compare_Engine( args );
