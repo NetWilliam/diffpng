@@ -396,8 +396,9 @@ public:
 		Luminance = 100.0f;
 		ColorFactor = 0.1f;
 		MaxPyramidLevels = 2;
-		//FinalMaxPyramidLevels = 5;
-		FinalMaxPyramidLevels = 3;
+		//FinalMaxPyramidLevels = 5; // 58 fails
+		FinalMaxPyramidLevels = 3; // 57 fails
+		//FinalMaxPyramidLevels = 2; // 75 fails
 		FlipExit = false;
 	}
 	bool Parse_Args(int argc, char **argv)
@@ -1174,8 +1175,8 @@ bool LevelClimberCompare(CompareArgs &args) {
 		args.ImgA->DownSample();
 		args.ImgB->DownSample();
 		if (args.ImgDiff) {
-			args.ImgA->WriteToFile( args.ImgDiff->Get_Name()+"downsample.png" );
-			args.ImgB->WriteToFile( args.ImgDiff->Get_Name()+"downsample.png" );
+			args.ImgA->WriteToFile( args.ImgDiff->Get_Name()+".1.downsample.png" );
+			args.ImgB->WriteToFile( args.ImgDiff->Get_Name()+".2.downsample.png" );
 			args.ImgDiff->DownSample();
 		}
 
@@ -1185,8 +1186,8 @@ bool LevelClimberCompare(CompareArgs &args) {
 		}
 
 		if (args.ImgDiff) {
-			args.ImgA->WriteToFile( args.ImgDiff->Get_Name()+"simpleblur.png" );
-			args.ImgB->WriteToFile( args.ImgDiff->Get_Name()+"simpleblur.png" );
+			args.ImgA->WriteToFile( args.ImgDiff->Get_Name()+".1.simpleblur.png" );
+			args.ImgB->WriteToFile( args.ImgDiff->Get_Name()+".2.simpleblur.png" );
 		}
 
 		args.ColorFactor = 0.05;
