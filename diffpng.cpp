@@ -340,7 +340,7 @@ Returns 0 on PASS (perceptually similar), 1 on FAIL (perceptually different)\n\
 \n\
 Options:\n\
  --fov deg	 Field of view in degrees (0.1 to 89.9)\n\
- --threshold p   # of pixels p below which differences are ignored\n\
+ --threshold p   % of pixels p below which differences are ignored\n\
  --gamma g	 Value to convert rgb into linear space (default 2.2)\n\
  --luminance l   White luminance (default 100.0 cdm^-2)\n\
  --luminanceonly Only consider luminance; ignore chroma (color) in the comparison\n\
@@ -392,7 +392,7 @@ public:
 		SumErrors = false;
 		FieldOfView = 45.0f;
 		Gamma = 2.2f;
-		ThresholdPixels = 100;
+		ThresholdPixelsPercent = 100.0/(512.0*512.0) * 100.0;
 		Luminance = 100.0f;
 		ColorFactor = 0.1f;
 		MaxPyramidLevels = 2;
@@ -437,13 +437,13 @@ public:
 				{
 					if (++i < argc)
 					{
-						int temporary = lexical_cast<int>(argv[i]);
+						int temporary = lexical_cast<float>(argv[i]);
 						if (temporary < 0)
 						{
 							cout << " invalid_argument(" <<
 								"-threshold must be positive";
 						}
-						ThresholdPixels = static_cast<unsigned int>(temporary);
+						ThresholdPixelsPercent = static_cast<float>(temporary);
 					}
 				}
 				else if (option_matches(argv[i], "gamma"))
@@ -570,7 +570,7 @@ public:
 	void Print_Args() const
 	{
 		cout << "Field of view is " << FieldOfView << " degrees\n"
-			  << "Threshold pixels is " << ThresholdPixels << " pixels\n"
+			  << "Threshold pixels percent is " << ThresholdPixelsPercent << "%\n"
 			  << "The Gamma is " << Gamma << "\n"
 			  << "The Display's luminance is " << Luminance
 			  << " candela per meter squared\n"
@@ -592,7 +592,7 @@ public:
 	float FieldOfView;  // Field of view in degrees
 	float Gamma;		// The gamma to convert to linear color space
 	float Luminance;	// the display's luminance
-	unsigned int ThresholdPixels;  // How many pixels different to ignore
+	float ThresholdPixelsPercent;  // How many pixels different to ignore (percent)
 	string ErrorStr;		  // Error string
 
 	// How much color to use in the metric.
@@ -975,6 +975,7 @@ bool Yee_Compare_Engine(CompareArgs &args)
 	}
 
 	unsigned pixels_failed = 0u;
+	unsigned total_pixels = w*h;
 	float error_sum = 0.;
 //#pragma omp parallel for reduction(+ : pixels_failed) reduction(+ : error_sum)
 	for (unsigned y = 0u; y < h; y++)
@@ -1086,7 +1087,10 @@ bool Yee_Compare_Engine(CompareArgs &args)
 	const string error_sum_buff = s.str();
 
 	s.str("");
-	s << pixels_failed << " pixels failed\n";
+	s << pixels_failed << " pixels failed. ";
+
+	float pixels_failed_percentage = 100.0*(float(pixels_failed)/total_pixels);
+	s << pixels_failed_percentage << " percentage\n";
 	const string different = s.str();
 
 	// Always output image difference if requested.
@@ -1099,7 +1103,7 @@ bool Yee_Compare_Engine(CompareArgs &args)
 		args.ErrorStr += "\n";
 	}
 
-	if (pixels_failed < args.ThresholdPixels)
+	if (pixels_failed_percentage < args.ThresholdPixelsPercent)
 	{
 		args.ErrorStr = "Images are roughly the same\n";
 		args.ErrorStr += different;

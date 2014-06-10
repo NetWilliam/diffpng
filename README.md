@@ -87,6 +87,7 @@ file LICENSE
 3. no dependencies
 4. small
 5. regression tests
+6. no crashes, no freezes
 
 practical effects of philosophy:
 
@@ -96,6 +97,14 @@ practical effects of philosophy:
 3. make default settings so it 'just works' for most ordinary situations
 4. use a large amount of regression test images (under test/ dir)
 5. the size of the test system is far larger than the program itself.
+
+long term goals:
+
+1. no pointers at all
+2. less than 1000 lines of code
+3. make fail-test run in less than 3 seconds. 
+4. unicode filenames under windows(TM)
+5. 'just works' paralellism
 
 ####modifications of Yee's & Myint's perceptual diff
 
