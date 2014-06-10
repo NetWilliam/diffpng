@@ -1180,7 +1180,10 @@ bool LevelClimberCompare(CompareArgs &args) {
 			args.ImgDiff->DownSample();
 		}
 
-		for (int i=0;i<2;i++){
+		// i=1, lots of fail
+		// i=2, 8 fail
+		// i=3, 7 fail
+		for (int i=0;i<3;i++){
 			args.ImgA->SimpleBlur();
 			args.ImgB->SimpleBlur();
 		}
