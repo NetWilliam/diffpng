@@ -64,6 +64,8 @@ endforeach()
 # message(STATUS "xxxxxx ${testlines}")
 
 # store our --output generated 'difference' images.
+message(STATUS "clearing ${PROJECT_BINARY_DIR}/imagediffs")
+file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/imagediffs")
 file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/imagediffs")
 
 set(counter ".")
