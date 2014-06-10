@@ -1166,9 +1166,9 @@ bool LevelClimberCompare(CompareArgs &args) {
 		test = Yee_Compare_Engine( args );
 	}
 	if (test==false) {
-		cout << "Tests failed at final max pyramid level. ";
-		//cout << "Retesting with Downsampling (shrink/blur image)";
-		cout << "Retesting with downsampling and simple blur";
+		cout << "Tests failed at final max pyramid level. \n";
+		//cout << "Retesting with Downsampling (shrink/blur image)\n";
+		cout << "Retesting with downsampling and simple blur\n";
 
 //		args.ImgA->UpSample();
 //		args.ImgB->UpSample();

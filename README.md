@@ -4,10 +4,17 @@ Compare two .png image files based on Hector Yee's PerceptualDiff algorithm
 
 Based on his paper "Perceptual Metric for Production Testing", 2004/1/1, Journal of Graphics Tools
 
+With modifications.
+
 ###hows it work?
 
 Consider these two images. One has green inner walls, the other does not. 
-Percpetually, to the human eye, they are different. 
+Percpetually, to the human eye, they are different. How can we compare them
+using a computer? One method is to compare the bytes of the files. This will
+not work for many images that are, to the human eye, indistinguishable. We
+need a 'perceptual difference' that takes into account the human visual system
+and how it interprets visual images. Hence, Hector Yee's algorithm, and
+diffpng which is based on it.
 
 ![OpenSCAD Color example](/test/basic/ossphere_color2.png "OpenSCAD Color")
 ![OpenSCAD Monotone example](/test/basic/ossphere_mono.png "OpenSCAD Monotone")
@@ -30,9 +37,9 @@ The resulting diff.png looks like this: (black=same, red=difference)
 
 ###build & install
 
-diffpng consists of a single file, diffpng.cpp. It can be used by
-itself to generate an executable, or it can be used as a header file
-in another program.
+diffpng consists of a single C++ language file, diffpng.cpp. It can be 
+used by itself to generate an executable program, or it can be used as a 
+header file in another C++ program.
 
 Executable:
 
@@ -87,7 +94,34 @@ practical effects of philosophy:
    avoid exceptions, pointers, stdc++0, 'auto', etc.
 2. as few files as possible (one, plus two for lodepng)
 3. make default settings so it 'just works' for most ordinary situations
-4. regression test images take up several megabytes (under test/ dir)
+4. use a large amount of regression test images (under test/ dir)
+5. the size of the test system is far larger than the program itself.
+
+####modifications of Yee's & Myint's perceptual diff
+
+1. Same basic algorithm
+2. Modified "Max Laplacian Pyramid Levels" to be settable at runtime
+3. Start with 2 max pyramid levels. It can quickly detect a good match.
+4. Only if 2 levels detects a mismatch will we increase the levels, default to 5.
+5. If 2 through 5 all fail, then try Downsampling once, with blur,
+   and then doing a simple blur three times. Then re-run the comparison.
+6. Default colorlevel setting is 0.05, enough to detect differences but not
+   enough to fail on a slight background tonal difference. This emphasizes
+   'luminance' far above 'chroma'/color in the diff test. 
+
+This acheives a level of perceptual diff that is roughly equivalent of 
+the following ImageMagick comparison:
+
+    convert img1 img2 -alpha Off -compose difference -composite -threshold 10% -morphology Erode Square -format "%[fx:w*h*mean]" info:
+ 
+### Why not use Imagemagick?
+
+ImageMagick is a huge dependency to require when a program only requires 
+simple image comparison. It is difficult to 'strip out' the ImageMagick 
+image compare code from the rest of the ImageMagick code base. 
+ImageMagick also has a history of portability problems, crash bugs, 
+backwards incompatability between versions, etc etc, which make it 
+unsuitable for regression testing in some situations.
 
 ###todo
 
