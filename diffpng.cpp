@@ -400,6 +400,9 @@ public:
 		FinalMaxPyramidLevels = 3; // 57 fails
 		//FinalMaxPyramidLevels = 2; // 75 fails
 		FlipExit = false;
+		ImgA = NULL; // Image A
+		ImgB = NULL; // Image B
+		ImgDiff = NULL; // Image Diff
 	}
 	bool Parse_Args(int argc, char **argv)
 	{
@@ -579,9 +582,9 @@ public:
 			  << "Final Max Laplacian Pyramid Levels is " << FinalMaxPyramidLevels << "\n";
 	}
 
-	RGBAImage *ImgA=NULL;	 // Image A
-	RGBAImage *ImgB=NULL;	 // Image B
-	RGBAImage *ImgDiff=NULL;  // Diff image
+	RGBAImage *ImgA;	 // Image A
+	RGBAImage *ImgB;	 // Image B
+	RGBAImage *ImgDiff;  // Diff image
 	bool Verbose;						// Print lots of text or not
 	bool LuminanceOnly;  // Only consider luminance; ignore chroma channels in
 						 // the
