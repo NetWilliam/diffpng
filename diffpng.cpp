@@ -209,6 +209,34 @@ public:
 		return rgbaimg;
 	}
 
+	void UpSample()
+	{
+		unsigned char red, green, blue, alpha;
+		unsigned oldwidth = Width;
+		//unsigned oldheight = Height;
+		unsigned newwidth = Width*2;
+		unsigned newheight = Height*2;
+		RGBAImage newimg( newwidth, newheight, this->Name );
+		for (unsigned x = 0; x < newwidth; x++) {
+		for (unsigned y = 0; y < newheight; y++) {
+                        red = this->Get_Red(     (y/2)*oldwidth + (x/2) );
+			green = this->Get_Green( (y/2)*oldwidth + (x/2) );
+			blue = this->Get_Blue(   (y/2)*oldwidth + (x/2) );
+			alpha = this->Get_Alpha( (y/2)*oldwidth + (x/2) );
+			newimg.Set( red, green, blue, alpha, y*newwidth+x );
+		}
+		}
+		Width = newwidth;
+		Height = newheight;
+		Data.clear();
+		Data.resize( newimg.Data.size() );
+		for (unsigned i=0;i<newimg.Data.size();i++) {
+			Data[i] = newimg.Data[i];
+		}
+		std::cout << "upsample. writing out\n";
+		this->WriteToFile(Name+"upsample.png");
+	}
+
 	// make the image half its original size.
 	// this will slightly blur the image.
 	// the result somewhat resembles antialiasing.
@@ -1146,14 +1174,18 @@ bool LevelClimberCompare(CompareArgs &args) {
 		//cout << "Retesting with Downsampling (shrink/blur image)";
 		cout << "Retesting with downsampling and simple blur";
 
+//		args.ImgA->UpSample();
+//		args.ImgB->UpSample();
 		args.ImgA->DownSample();
 		args.ImgB->DownSample();
 		if (args.ImgDiff) args.ImgDiff->DownSample();
 
-		for (int i=0;i<4;i++){
+
+		for (int i=0;i<2;i++){
 			args.ImgA->SimpleBlur();
 			args.ImgB->SimpleBlur();
 		}
+
 
 		args.ColorFactor = 0.05;
 		test = Yee_Compare_Engine( args );
@@ -1207,14 +1239,14 @@ int main(int argc, char **argv)
 			if (args.Verbose)
 			{
 				if (interactive()) std::cout << green;
-				std::cout << "PASS: " << args.ErrorStr;
+				std::cout << "PASS: result: " << args.ErrorStr;
 				if (interactive()) std::cout << nocolor;
 			}
 		}
 		else
 		{
 			if (interactive()) std::cout << red;
-			std::cout << "FAIL: " << args.ErrorStr;
+			std::cout << "FAIL: result: " << args.ErrorStr;
 			if (interactive()) std::cout << nocolor;
 		}
 

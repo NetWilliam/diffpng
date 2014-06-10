@@ -14,9 +14,6 @@ set(CMAKE_BUILD_TYPE Debug)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
-
-
-
 #
 # Regression tests
 #
@@ -372,6 +369,46 @@ set(testlines
 "PASS opencsgtest/use-tests-actual.png opencsgtest/use-tests-expected.png"
 )
 
+#
+# when under ./matches, file1.png, file2.png should match
+# when under ./differs, file1.png, file2.png should not match
+#
+# for each file pair (file1.png / file2.png) set up a 'test line'
+# that is formatted with three entires. Here are two examples:
+#
+# FAIL differs/sphere1.png differs/sphere2.png
+# PASS matches/cube1.png matches/cube2.png
+#
+# Thus, when diffpng runs with input cube1, cube2, it should PASS (they match)
+# and when diffpng runs with input sphere1, sphere2, it should FAIL (dont match)
+#
+# This can be confusing, because successfully determining whether the images
+# match or not is considered PASS in ctest. 
+#
+# Todo: fix terminology of diffpng to be MATCHES or DIFFERS
+
+file(GLOB differspngs "${PROJECT_SOURCE_DIR}/test/differs/*1.png")
+file(GLOB matchespngs "${PROJECT_SOURCE_DIR}/test/matches/*1.png")
+#message(STATUS "differs--> ${failpngs}")
+
+function(setup_testline filename1 test_or_fail)
+  string(REPLACE "${PROJECT_SOURCE_DIR}/test" "" pngfile ${pngfile})
+  set(filename1 "${pngfile}")
+  string(REPLACE "1.png" "2.png" filename2 ${filename1})
+  set(testline "${test_or_fail} ${filename1} ${filename2}")
+  # message(STATUS "testline--> ${testline}")
+  set(testlines "${testlines};${testline}" PARENT_SCOPE)
+endfunction(setup_testline)
+
+foreach(pngfile ${differspngs})
+  setup_testline(${pngfile} "FAIL")
+endforeach()
+foreach(pngfile ${matchespngs})
+  setup_testline(${pngfile} "PASS")
+endforeach()
+
+# message(STATUS "xxxxxx ${testlines}")
+
 # store our --output generated 'difference' images.
 file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/imagediffs")
 
@@ -389,6 +426,8 @@ foreach(testline ${testlines})
   set(testname "${img1}_vs_${img2}")
   string(REGEX REPLACE "\\.png" "" testname ${testname})
   string(REGEX REPLACE "/" "-" testname ${testname})
+  string(REGEX REPLACE "^-" "" testname ${testname})
+  string(REGEX REPLACE "_-" "_" testname ${testname})
   string(REGEX REPLACE "[^A-Za-z0-9_-]+" "" testname ${testname})
 
   set(img1 "${PROJECT_SOURCE_DIR}/test/${img1}")
