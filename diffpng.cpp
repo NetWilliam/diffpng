@@ -280,6 +280,27 @@ public:
 		}
 	}
 
+	// shift image by # pixels
+	void Shift(int xpix, int ypix)
+	{
+		RGBAImage newimg( Width, Height, this->Name );
+		unsigned char red, green, blue, alpha;
+		for (unsigned x = 0; x < Width; x++) {
+		for (unsigned y = 0; y < Height; y++) {
+                        red = this->Get_Red(     (y+ypix)*Width + (x+xpix) );
+			green = this->Get_Green( (y+ypix)*Width + (x+xpix) );
+			blue = this->Get_Blue(   (y+ypix)*Width + (x+xpix) );
+			alpha = this->Get_Alpha( (y+ypix)*Width + (x+xpix) );
+			newimg.Set( red, green, blue, alpha, y*Width+x );
+		}
+		}
+		Data.clear();
+		Data.resize( newimg.Data.size() );
+		for (unsigned i=0;i<newimg.Data.size();i++) {
+			Data[i] = newimg.Data[i];
+		}
+	}
+
 	// this somewhat resembles antialiasing.
 	void SimpleBlur()
 	{
@@ -386,13 +407,13 @@ public:
 	CompareArgs()
 	{
 		// use some nice defaults that will 'just work' for most cases
-		// heavy on luminance, light on color (colorfactor 0.1)
+		// heavy on luminance, light on color
 		Verbose = true;
 		LuminanceOnly = false;
 		SumErrors = false;
 		FieldOfView = 45.0f;
 		Gamma = 2.2f;
-		ThresholdPixelsPercent = 100.0/(512.0*512.0) * 100.0;
+		ThresholdPixelsPercent = 128.0/(512.0*512.0) * 100.0;
 		Luminance = 100.0f;
 		ColorFactor = 0.1f;
 		MaxPyramidLevels = 2;
@@ -500,7 +521,7 @@ public:
 						ColorFactor = lexical_cast<float>(argv[i]);
 					}
 				}
-				else if (option_matches(argv[i], "output"))
+				else if (option_matches(argv[i], "output") || option_matches(argv[i],"o"))
 				{
 					if (++i < argc)
 					{
@@ -1167,11 +1188,53 @@ bool LevelClimberCompare(CompareArgs &args) {
 	test = Yee_Compare_Engine( args );
 
 	while (test==false && args.MaxPyramidLevels<args.FinalMaxPyramidLevels) {
-		cout << "Test failed with Max # Pyramid Levels=" << args.MaxPyramidLevels;
+		cout << "Test failed with Max # Pyramid Levels=" << args.MaxPyramidLevels << "\n";
+		cout << "result:" << test << " : " << args.ErrorStr << "\n";
 		args.MaxPyramidLevels++;
 		cout << ". Rerunning with " << args.MaxPyramidLevels << "\n";
 		test = Yee_Compare_Engine( args );
 	}
+	if (test==false) {
+		cout << "Tests failed at final max pyramid level. \n";
+		cout << "Retesting with downsampling and simple blur\n\n";
+		args.ImgA->DownSample();
+		args.ImgB->DownSample();
+		args.ImgA->SimpleBlur();
+		args.ImgB->SimpleBlur();
+		args.ImgA->SimpleBlur();
+		args.ImgB->SimpleBlur();
+		args.ImgA->SimpleBlur();
+		args.ImgB->SimpleBlur();
+		if (args.ImgDiff) {
+			args.ImgA->WriteToFile( args.ImgDiff->Get_Name()+".1.downsample.png" );
+			args.ImgB->WriteToFile( args.ImgDiff->Get_Name()+".2.downsample.png" );
+			args.ImgDiff->DownSample();
+		}
+		args.ColorFactor = 0.05;
+		test = Yee_Compare_Engine( args );
+	}
+	if (test==false) {
+		args.ColorFactor = 0.01;
+		cout << "Tests failed after downsample. \n";
+		cout << "Retesting with small pixel shifts\n";
+		args.ImgB->Shift(-1,0);
+		args.ImgB->WriteToFile( "r0.png" );
+		test |= Yee_Compare_Engine( args );
+		cout << "result:" << test << " : " << args.ErrorStr << "\n";
+		args.ImgB->Shift(2,0);
+		args.ImgB->WriteToFile( "r1.png" );
+		test |= Yee_Compare_Engine( args );
+		cout << "result:" << test << " : " << args.ErrorStr << "\n";
+		args.ImgB->Shift(-1,-1);
+		args.ImgB->WriteToFile( "r2.png" );
+		test |= Yee_Compare_Engine( args );
+		cout << "result:" << test << " : " << args.ErrorStr << "\n";
+		args.ImgB->Shift(0,2);
+		args.ImgB->WriteToFile( "r3.png" );
+		test |= Yee_Compare_Engine( args );
+		cout << "result:" << test << " : " << args.ErrorStr << "\n";
+	}
+#if 0
 	if (test==false) {
 		cout << "Tests failed at final max pyramid level. \n";
 		//cout << "Retesting with Downsampling (shrink/blur image)\n";
@@ -1179,6 +1242,7 @@ bool LevelClimberCompare(CompareArgs &args) {
 
 //		args.ImgA->UpSample();
 //		args.ImgB->UpSample();
+
 		args.ImgA->DownSample();
 		args.ImgB->DownSample();
 		if (args.ImgDiff) {
@@ -1203,6 +1267,7 @@ bool LevelClimberCompare(CompareArgs &args) {
 		args.ColorFactor = 0.05;
 		test = Yee_Compare_Engine( args );
 	}
+#endif
 	return test;
 }
 
