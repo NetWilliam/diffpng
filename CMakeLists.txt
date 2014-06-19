@@ -9,8 +9,8 @@ install(TARGETS diffpng DESTINATION bin)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
-set(CMAKE_BUILD_TYPE Debug)
-#set(CMAKE_BUILD_TYPE Release)
+#set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
@@ -100,7 +100,10 @@ foreach(testline ${testlines})
   set(counter "${counter}.")
 
 endforeach()
+
+add_test(NAME grayscale-gleam COMMAND "${PROJECT_BINARY_DIR}/diffpng" "--graygleam" "${PROJECT_SOURCE_DIR}/test/matches/sphe1.png" "${PROJECT_SOURCE_DIR}/test/matches/sphe2.png" "--output" "${diffimg}")
+
 string(LENGTH ${counter} numtests)
-message(STATUS "Tests added: " ${numtests})
+message(STATUS "Tests added: 1+ " ${numtests})
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS "diffpng")

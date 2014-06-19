@@ -97,6 +97,10 @@ practical effects of philosophy:
 3. make default settings so it 'just works' for most ordinary situations
 4. use a large amount of regression test images (under test/ dir)
 5. the size of the test system is far larger than the program itself.
+6. output MATCHES and DIFFERS (not PASS/FAIL). this avoids confusion 
+   running ctest (some images should differ, and detecting this is a Ctest 
+   PASS not a failure).
+7. use standard unix return values. 0 = MATCHES, 1 = DIFFERS
 
 long term goals:
 
@@ -123,14 +127,25 @@ the following ImageMagick comparison:
 
     convert img1 img2 -alpha Off -compose difference -composite -threshold 10% -morphology Erode Square -format "%[fx:w*h*mean]" info:
  
-### Why not use Imagemagick?
+###what about Imagemagick and phash?
 
 ImageMagick is a huge dependency to require when a program only requires 
-simple image comparison. It is difficult to 'strip out' the ImageMagick 
+simple image comparison. It is also difficult to 'strip out' the ImageMagick 
 image compare code from the rest of the ImageMagick code base. 
 ImageMagick also has a history of portability problems, crash bugs, 
 backwards incompatability between versions, etc etc, which make it 
 unsuitable for regression testing in some situations.
+
+phash is also rather large, and a basic use of it produces false 
+matches, for example diffpng's "diffs" test contains two images that 
+should produce a non-match. 'spher1.png' and 'spher2.png'.
+
+Using pyPhash:
+
+>>> h1 = pHash.imagehash('difffpng/test/differs/spher1.png')
+>>> h2 = pHash.imagehash('difffpng/test/differs/spher2.png')
+>>> print pHash.hamming_distance( h1, h2), h1, h2
+0 4261506436910995169 4261506436910995169
 
 ###todo
 
@@ -160,3 +175,5 @@ For diffpng:
 
 * Lode Vandevenne's lodepng. http://lodev.org/lodepng/
 * OpenSCAD regression test images http://github.com/openscad/openscad/tests
+* Grayscale Gleam http://cseweb.ucsd.edu/~ckanan/publications/Kanan_Cottrell_PloS_ONE_2012.pdf
+
