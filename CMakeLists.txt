@@ -54,9 +54,11 @@ function(setup_testline filename1 test_or_fail)
   set(testlines "${testlines};${testline}" PARENT_SCOPE)
 endfunction(setup_testline)
 
+message(STATUS "adding tests for files in ${PROJECT_SOURCE_DIR}/test/differs")
 foreach(pngfile ${differspngs})
   setup_testline(${pngfile} "FAIL")
 endforeach()
+message(STATUS "adding tests for files in ${PROJECT_SOURCE_DIR}/test/matches")
 foreach(pngfile ${matchespngs})
   setup_testline(${pngfile} "PASS")
 endforeach()
@@ -101,9 +103,7 @@ foreach(testline ${testlines})
 
 endforeach()
 
-add_test(NAME grayscale-gleam COMMAND "${PROJECT_BINARY_DIR}/diffpng" "--graygleam" "${PROJECT_SOURCE_DIR}/test/matches/sphe1.png" "${PROJECT_SOURCE_DIR}/test/matches/sphe2.png" "--output" "${diffimg}")
-
 string(LENGTH ${counter} numtests)
-message(STATUS "Tests added: 1+ " ${numtests})
+message(STATUS "Tests added: " ${numtests})
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS "diffpng")

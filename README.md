@@ -1,34 +1,33 @@
 #diffpng
 
-Compare two .png image files based on Hector Yee's PerceptualDiff algorithm
+Compare two .png image files using modified Hector Yee's PerceptualDiff algorithm
 
-Based on his paper "Perceptual Metric for Production Testing", 2004/1/1, Journal of Graphics Tools
-
-With modifications.
+Based on Yee's paper "Perceptual Metric for Production Testing", 2004/1/1, Journal of Graphics Tools
 
 ###hows it work?
 
-Consider these two images. One has green inner walls, the other does not. 
-Percpetually, to the human eye, they are different. How can we compare them
-using a computer? One method is to compare the bytes of the files. This will
-not work for many images that are, to the human eye, indistinguishable. We
-need a 'perceptual difference' that takes into account the human visual system
-and how it interprets visual images. Hence, Hector Yee's algorithm, and
-diffpng which is based on it.
-
-![OpenSCAD Color example](/test/basic/ossphere_color2.png "OpenSCAD Color")
-![OpenSCAD Monotone example](/test/basic/ossphere_mono.png "OpenSCAD Monotone")
+Consider these two images. They are 'close enough' to the human eye, but 
+a computer would consider them quite different. How can we compare them 
+using a computer? We need a 'perceptual difference' that takes into 
+account the human visual system and how it interprets visual images. 
+Hence, Hector Yee's algorithm, and diffpng which is based on it.
 
 We can compare these two images using diffpng as follows:
 
     diffpng img1.png img2.png --output diff.png
 
-The program will print a text message indicating the images are 
-different. 
+The program will print a text message indicating the images look the same
 
-    FAIL: Images are visibly different
+    MATCHES: Images are roughly the same
 
-(If they had been similar, it would say "PASS: Images are roughly the same")
+Now consider two differing images.
+
+![OpenSCAD Color example](/test/basic/ossphere_color2.png "OpenSCAD Color")
+![OpenSCAD Monotone example](/test/basic/ossphere_mono.png "OpenSCAD Monotone")
+
+This will produce:
+
+    DIFFERS: Images are perceptually different
 
 The program will also produce an image highlighting the differences. 
 The resulting diff.png looks like this: (black=same, red=difference)
@@ -37,9 +36,10 @@ The resulting diff.png looks like this: (black=same, red=difference)
 
 ###build & install
 
-diffpng consists of a single C++ language file, diffpng.cpp. It can be 
-used by itself to generate an executable program, or it can be used as a 
-header file in another C++ program.
+diffpng consists of a single C++ language file, diffpng.cpp, alongside 
+Lode Vandevenne's lodepng.cpp/lodepng.h for PNG image loading. 
+diffpng.cpp can be used by itself to generate an executable program, or 
+it can be used as a header file in another C++ program.
 
 Executable:
 
@@ -118,12 +118,13 @@ long term goals:
 4. Only if 2 levels detects a mismatch will we increase the levels, default to 5.
 5. If 2 through 5 all fail, then try Downsampling once, with blur,
    and then doing a simple blur three times. Then re-run the comparison.
-6. Default colorlevel setting is 0.05, enough to detect differences but not
-   enough to fail on a slight background tonal difference. This emphasizes
-   'luminance' far above 'chroma'/color in the diff test. 
+6. Also do a 'shift by one pixel' test. For OpenGL differences b/t platforms.
+7. Alter Default colorlevel setting. Try to balance between ignoring
+   small differences in background tones, but not accepting images with
+   big pixel differences.
 
-This acheives a level of perceptual diff that is roughly equivalent of 
-the following ImageMagick comparison:
+This acheives a level of perceptual diff that is extremely roughly 
+equivalent of the following ImageMagick comparison:
 
     convert img1 img2 -alpha Off -compose difference -composite -threshold 10% -morphology Erode Square -format "%[fx:w*h*mean]" info:
  
@@ -137,8 +138,8 @@ backwards incompatability between versions, etc etc, which make it
 unsuitable for regression testing in some situations.
 
 phash is also rather large, and a basic use of it produces false 
-matches, for example diffpng's "diffs" test contains two images that 
-should produce a non-match. 'spher1.png' and 'spher2.png'.
+matches, for example look at diffpng's "differs" tests. There are two 
+images that should produce a non-match. 'spher1.png' and 'spher2.png'.
 
 Using pyPhash:
 
@@ -146,6 +147,8 @@ Using pyPhash:
 >>> h2 = pHash.imagehash('difffpng/test/differs/spher2.png')
 >>> print pHash.hamming_distance( h1, h2), h1, h2
 0 4261506436910995169 4261506436910995169
+
+Note the hashes match exactly. That's a problem for regression testing.
 
 ###todo
 
@@ -157,6 +160,26 @@ should tiny speckled pixels count as 'different'?
 clarify the 'default settings' vs what settings user can alter.
 
 windows unicode filenames
+
+###ctest
+
+The built in test suite allows you to modify diffpng's algorithms while
+testing what the practical effect will be. 
+
+Test images are stored in two main directories, under 'test', like so.
+Consider two files:
+
+    test/differs/file1.png
+    test/differs/file2.png
+
+file1.png and file2.png should differ
+
+Now consider these two:
+
+    test/matches/img1.png
+    test/matches/img2.png
+
+img1.png and img2.png should match
 
 ###credits
 
@@ -175,5 +198,4 @@ For diffpng:
 
 * Lode Vandevenne's lodepng. http://lodev.org/lodepng/
 * OpenSCAD regression test images http://github.com/openscad/openscad/tests
-* Grayscale Gleam http://cseweb.ucsd.edu/~ckanan/publications/Kanan_Cottrell_PloS_ONE_2012.pdf
 
