@@ -8,8 +8,8 @@ Based on Yee's paper "Perceptual Metric for Production Testing", 2004/1/1, Journ
 
 Consider these two images. Are they the same or not?
 
-![example1](/test/differs/circ1.png "OpenSCAD Color")
-![example2](/test/differs/circ2.png "OpenSCAD Monotone")
+![example1](/test/matches/circ1.png "OpenSCAD Color")
+![example2](/test/matches/circ2.png "OpenSCAD Monotone")
 
 They are very close to being the same, to the human eye, but if you 
 carefully examine them they are slightly different. If you loaded two 
