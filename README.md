@@ -217,7 +217,7 @@ pass or fail, as it's detector algorithm will change whether it considers
 certain images to be identical or to be different. 
 
 The log for the tests will be stored by the 'ctest' program after it 
-runs. It will be in a subdirectory of directory where you run 'ctest', 
+runs. It will be in a subdirectory of the directory where you run 'ctest', 
 and the filename will be like so:
 
     Testing/Temporary/LastTest.log
@@ -242,5 +242,4 @@ For the original PerceptualDiff (PDiff):
 For diffpng:
 
 * Lode Vandevenne's lodepng. http://lodev.org/lodepng/
-* OpenSCAD regression test images http://github.com/openscad/openscad/tests
-
+* OpenSCAD regression test system, by Marius Kintel. https://github.com/openscad/openscad/tree/master/tests
