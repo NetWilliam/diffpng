@@ -9,7 +9,7 @@ Based on Yee's paper "Perceptual Metric for Production Testing", 2004/1/1, Journ
 Consider these two images. Are they the same or not?
 
 ![example1](/test/differs/circ1.png "OpenSCAD Color")
-![example2](/test/differs/circ22.png "OpenSCAD Monotone")
+![example2](/test/differs/circ2.png "OpenSCAD Monotone")
 
 They are very close to being the same, to the human eye, but if you 
 carefully examine them they are slightly different. If you loaded two 
@@ -31,8 +31,8 @@ The program will print a text message indicating the images look the same
 
 Now consider two differing images.
 
-![OpenSCAD Color example](/test/differs/ossphere1.png "OpenSCAD Color")
-![OpenSCAD Monotone example](/test/differs/ossphere2.png "OpenSCAD Monotone")
+![OpenSCAD Color example](/test/differs/ossphere_color2_1.png "OpenSCAD Color")
+![OpenSCAD Monotone example](/test/differs/ossphere_color2_2.png "OpenSCAD Monotone")
 
 If we compare them with diffpng, we will get a different result.
 
