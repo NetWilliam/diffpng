@@ -111,7 +111,7 @@ file LICENSE
 This acheives a level of perceptual diff that is extremely roughly 
 equivalent of the following ImageMagick comparison:
 
-    convert img1 img2 -alpha Off -compose difference -composite -threshold 10% -morphology Erode Square -format "%[fx:w*h*mean]" info:
+convert img1 img2 -alpha Off -compose difference -composite -threshold 10% -morphology Erode Square -format "%[fx:w*h*mean]" info:
 
 It was made to work with the regression test system of the OpenSCAD project.
  
@@ -160,10 +160,12 @@ images that should produce a non-match. 'spher1.png' and 'spher2.png'.
 
 Using pyPhash:
 
+```
 >>> h1 = pHash.imagehash('difffpng/test/differs/spher1.png')
 >>> h2 = pHash.imagehash('difffpng/test/differs/spher2.png')
 >>> print pHash.hamming_distance( h1, h2), h1, h2
 0 4261506436910995169 4261506436910995169
+```
 
 Note the hashes match exactly. That's a problem for regression testing.
 
