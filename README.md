@@ -6,11 +6,20 @@ Based on Yee's paper "Perceptual Metric for Production Testing", 2004/1/1, Journ
 
 ###hows it work?
 
-Consider these two images. They are 'close enough' to the human eye, but 
-a computer would consider them quite different. How can we compare them 
-using a computer? We need a 'perceptual difference' that takes into 
-account the human visual system and how it interprets visual images. 
-Hence, Hector Yee's algorithm, and diffpng which is based on it.
+Consider these two images. Are they the same or not?
+
+![example1](/test/differs/circ1.png "OpenSCAD Color")
+![example2](/test/differs/circ22.png "OpenSCAD Monotone")
+
+They are very close to being the same, to the human eye, but if you 
+carefully examine them they are slightly different. If you loaded two 
+copies on the same screen and flipped back and forth quickly, you would 
+see the tiny differences.
+
+But how can we compare them using a computer? We need a 'perceptual 
+difference' that takes into account the human visual system and how it 
+interprets visual images. Hence, Hector Yee's algorithm, and diffpng 
+which is based on it.
 
 We can compare these two images using diffpng as follows:
 
@@ -22,10 +31,10 @@ The program will print a text message indicating the images look the same
 
 Now consider two differing images.
 
-![OpenSCAD Color example](/test/basic/ossphere_color2.png "OpenSCAD Color")
-![OpenSCAD Monotone example](/test/basic/ossphere_mono.png "OpenSCAD Monotone")
+![OpenSCAD Color example](/test/differs/ossphere1.png "OpenSCAD Color")
+![OpenSCAD Monotone example](/test/differs/ossphere2.png "OpenSCAD Monotone")
 
-This will produce:
+If we compare them with diffpng, we will get a different result.
 
     DIFFERS: Images are perceptually different
 
@@ -34,6 +43,11 @@ The resulting diff.png looks like this: (black=same, red=difference)
 
 ![diffpng result](/test/basic/diffpng_example.png "diffpng example")
 
+So. Diffpng will allow you to write programs that can detect, roughly,
+whether two images "look the same" to the human eye, even if they are
+slightly different, while it can also detect images that "look different"
+to the human eye.
+
 ###build & install
 
 diffpng consists of a single C++ language file, diffpng.cpp, alongside 
@@ -41,14 +55,14 @@ Lode Vandevenne's lodepng.cpp/lodepng.h for PNG image loading.
 diffpng.cpp can be used by itself to generate an executable program, or 
 it can be used as a header file in another C++ program.
 
-Executable:
+To build as an executable program 'diffpng':
 
     # Get Cmake (http://www.cmake.org)
     mkdir bin && cd bin && cmake ..
     ctest # run regression tests
     cp ./diffpng /wherever/you/want
 
-As header:
+To use as a header file in your own program:
 
 Imagine you have a program 'myprogram.cpp'. Put these two lines at the top.
 
@@ -80,6 +94,27 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details in the
 file LICENSE
 
+####modifications of Yee's & Myint's perceptual diff
+
+1. Same basic algorithm
+2. Modified "Max Laplacian Pyramid Levels" to be settable at runtime
+3. Start with 2 max pyramid levels. It can quickly detect a good match.
+4. Only if 2 levels detects a mismatch will we increase the levels, 
+   default to 5. This means that for very similar images, the program
+   runs pretty fast. For 512x512, usually less than 2 seconds.
+5. If 2 through 5 all fail, then try Downsampling and blurring the image,
+   and also shifting it by a few pixels. Re-run the comparisons.
+6. Alter Default colorlevel setting. Try to balance between ignoring
+   small differences in background tones, but not accepting images with
+   big pixel differences.
+
+This acheives a level of perceptual diff that is extremely roughly 
+equivalent of the following ImageMagick comparison:
+
+    convert img1 img2 -alpha Off -compose difference -composite -threshold 10% -morphology Erode Square -format "%[fx:w*h*mean]" info:
+
+It was made to work with the regression test system of the OpenSCAD project.
+ 
 ###design philosophy
 
 1. simple
@@ -110,24 +145,6 @@ long term goals:
 4. unicode filenames under windows(TM)
 5. 'just works' paralellism
 
-####modifications of Yee's & Myint's perceptual diff
-
-1. Same basic algorithm
-2. Modified "Max Laplacian Pyramid Levels" to be settable at runtime
-3. Start with 2 max pyramid levels. It can quickly detect a good match.
-4. Only if 2 levels detects a mismatch will we increase the levels, default to 5.
-5. If 2 through 5 all fail, then try Downsampling once, with blur,
-   and then doing a simple blur three times. Then re-run the comparison.
-6. Also do a 'shift by one pixel' test. For OpenGL differences b/t platforms.
-7. Alter Default colorlevel setting. Try to balance between ignoring
-   small differences in background tones, but not accepting images with
-   big pixel differences.
-
-This acheives a level of perceptual diff that is extremely roughly 
-equivalent of the following ImageMagick comparison:
-
-    convert img1 img2 -alpha Off -compose difference -composite -threshold 10% -morphology Erode Square -format "%[fx:w*h*mean]" info:
- 
 ###what about Imagemagick and phash?
 
 ImageMagick is a huge dependency to require when a program only requires 
