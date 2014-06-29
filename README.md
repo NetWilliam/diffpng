@@ -41,7 +41,7 @@ If we compare them with diffpng, we will get a different result.
 The program will also produce an image highlighting the differences. 
 The resulting diff.png looks like this: (black=same, red=difference)
 
-![diffpng result](/test/basic/diffpng_example.png "diffpng example")
+![diffpng result](/test/matches/diffpng_example.png "diffpng example")
 
 So. Diffpng will allow you to write programs that can detect, roughly,
 whether two images "look the same" to the human eye, even if they are
