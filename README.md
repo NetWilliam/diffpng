@@ -183,7 +183,10 @@ windows unicode filenames
 ###ctest
 
 The built in test suite allows you to modify diffpng's algorithms while
-testing what the practical effect will be. 
+testing what the practical effect will be. The instructions for running
+are above, under 'build'. It is recommended to use a separate 'build' 
+directory, and not to just run 'cmake/ctest' from within the source code
+directory.
 
 Test images are stored in two main directories, under 'test', like so.
 Consider two files:
@@ -199,6 +202,29 @@ Now consider these two:
     test/matches/img2.png
 
 img1.png and img2.png should match
+
+When you run 'cmake', the cmake system will build a CTestTestfile.cmake that
+contains a list of test-runs to make against all of our test images. 
+
+Running the following command will start the tests and show results.
+
+    ctest
+
+On most machines, almost all tests should result in a PASS. 
+
+As you modify the internal guts of diffpng, you will see various tests
+pass or fail, as it's detector algorithm will change whether it considers
+certain images to be identical or to be different. 
+
+The log for the tests will be stored by the 'ctest' program after it 
+runs. It will be in a subdirectory of directory where you run 'ctest', 
+and the filename will be like so:
+
+    Testing/Temporary/LastTest.log
+
+diffpng can generate images during its test run, such as blurred and downsampled
+images, and the 'difference' images. These are stored under the 'imagediffs'
+subdirectory where you run 'ctest'. 
 
 ###credits
 
