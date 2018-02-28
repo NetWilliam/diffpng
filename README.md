@@ -1,10 +1,10 @@
-#diffpng
+# diffpng
 
 Compare two .png image files using modified Hector Yee's PerceptualDiff algorithm
 
 Based on Yee's paper "Perceptual Metric for Production Testing", 2004/1/1, Journal of Graphics Tools
 
-###hows it work?
+### hows it work?
 
 Consider these two images. Are they the same or not?
 
@@ -48,7 +48,7 @@ whether two images "look the same" to the human eye, even if they are
 slightly different, while it can also detect images that "look different"
 to the human eye.
 
-###build & install
+### build & install
 
 diffpng consists of a single C++ language file, diffpng.cpp, alongside 
 Lode Vandevenne's lodepng.cpp/lodepng.h for PNG image loading. 
@@ -72,13 +72,13 @@ Imagine you have a program 'myprogram.cpp'. Put these two lines at the top.
 Now call diffpng using the same method used in main() at the bottom of the file.
 (Note your program will also need lodepng)
 
-###usage
+### usage
 
     diffpng image1.png image2.png --output diff.png
 
     for other options, run diffpng --help
 
-###license
+### license
 
 * Copyright (C) 2006-2011 Yangli Hector Yee (PerceptualDiff)
 * Copyright (C) 2011-2014 Steven Myint (PerceptualDiff)
@@ -94,7 +94,7 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details in the
 file LICENSE
 
-####modifications of Yee's & Myint's perceptual diff
+#### modifications of Yee's & Myint's perceptual diff
 
 1. Same basic algorithm
 2. Modified "Max Laplacian Pyramid Levels" to be settable at runtime
@@ -115,7 +115,7 @@ convert img1 img2 -alpha Off -compose difference -composite -threshold 10% -morp
 
 It was made to work with the regression test system of the OpenSCAD project.
  
-###design philosophy
+### design philosophy
 
 1. simple
 2. portable
@@ -145,7 +145,7 @@ long term goals:
 4. unicode filenames under windows(TM)
 5. 'just works' paralellism
 
-###what about Imagemagick and phash?
+### what about Imagemagick and phash?
 
 ImageMagick is a huge dependency to require when a program only requires 
 simple image comparison. It is also difficult to 'strip out' the ImageMagick 
@@ -169,7 +169,7 @@ Using pyPhash:
 
 Note the hashes match exactly. That's a problem for regression testing.
 
-###todo
+### todo
 
 clarify issue with chroma vs luminance. . . do color swatches produce diffs?
 can we use colorfactor 0.1 or 0.05? 
@@ -180,7 +180,7 @@ clarify the 'default settings' vs what settings user can alter.
 
 windows unicode filenames
 
-###ctest
+### ctest
 
 The built in test suite allows you to modify diffpng's algorithms while
 testing what the practical effect will be. The instructions for running
@@ -226,7 +226,7 @@ diffpng can generate images during its test run, such as blurred and downsampled
 images, and the 'difference' images. These are stored under the 'imagediffs'
 subdirectory where you run 'ctest'. 
 
-###credits
+### credits
 
 For the original PerceptualDiff (PDiff):
 
