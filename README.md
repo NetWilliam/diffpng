@@ -58,7 +58,7 @@ it can be used as a header file in another C++ program.
 To build as an executable program 'diffpng':
 
     # Get Cmake (http://www.cmake.org)
-    mkdir bin && cd bin && cmake ..
+    mkdir bin && cd bin && cmake .. && make
     ctest # run regression tests
     cp ./diffpng /wherever/you/want
 
