@@ -63,7 +63,7 @@ LodePNG Examples
 
 #ifndef DIFFPNG_HPP
 #define DIFFPNG_HPP
-
+#include <iso646.h>
 #include "lodepng.h"
 #include <assert.h>
 #include <cstdlib>
@@ -938,7 +938,8 @@ bool Yee_Compare_Engine(CompareArgs &args)
 
 	assert(args.MaxPyramidLevels >= 2); // ?? >2 or >=2
 
-	float F_freq[args.MaxPyramidLevels - 2];
+	//float F_freq[args.MaxPyramidLevels - 2];
+	std::vector<float> F_freq(args.FinalMaxPyramidLevels - 2);
 	for (unsigned i = 0u; i < args.MaxPyramidLevels - 2; i++)
 	{
 		F_freq[i] = csf_max / csf(cpd[i], 100.0f);
@@ -953,7 +954,8 @@ bool Yee_Compare_Engine(CompareArgs &args)
 		for (unsigned x = 0u; x < w; x++)
 		{
 			const unsigned index = x + y * w;
-			float contrast[args.MaxPyramidLevels - 2];
+			//float contrast[args.MaxPyramidLevels - 2];
+			std::vector<float> contrast(args.MaxPyramidLevels - 2);
 			float sum_contrast = 0;
 			for (unsigned i = 0u; i < args.MaxPyramidLevels - 2; i++)
 			{
@@ -976,7 +978,8 @@ bool Yee_Compare_Engine(CompareArgs &args)
 			{
 				sum_contrast = 1e-5f;
 			}
-			float F_mask[args.MaxPyramidLevels - 2];
+			//float F_mask[args.MaxPyramidLevels - 2];
+			std::vector<float> F_mask(args.FinalMaxPyramidLevels - 2);
 			float adapt = la.Get_Value(x, y, adaptation_level) +
 						 lb.Get_Value(x, y, adaptation_level);
 			adapt *= 0.5f;
