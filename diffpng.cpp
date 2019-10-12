@@ -1282,11 +1282,11 @@ bool interactive()
 {
     return false;
 }
-
+//#define TESTMULTI true
 
 int main(int argc, char **argv)
 {
-    for (int j = 0; j < 100; ++j) {
+    for (int j = 0; j < 1000; ++j) {
         for (int i = 0; i < 1; ++i) {
 #ifdef TESTMULTI
             std::vector<diffpng::CompareArgs> argss(64);
@@ -1326,6 +1326,9 @@ int main(int argc, char **argv)
 #else
             std::vector<bool> matchess = diffpng::LevelClimberCompareMulti(argss);
             bool matches = matchess[0];
+            if (std::all_of(matchess.begin(), matchess.end(), [](bool b){return b;})) {
+                std::cout << "Done, All true" << std::endl;
+            }
 #endif
             if (matches)
             {
