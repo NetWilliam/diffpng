@@ -95,6 +95,7 @@
 #ifndef M_PI
 #define M_PI 3.14159265f
 #endif
+//#undef __AVX2__
 
 class RGBAImage;
 class CompareArgs;
@@ -846,10 +847,12 @@ namespace diffpng
         r[0] = x / global_white.x;
         r[1] = y / global_white.y;
         r[2] = z / global_white.z;
-#define calc_f_from_r(r, f) if((r) > epsilon) { (f) = powf((r), 1.0f / 3.0f);} else { (f) = (kappa * (r) + 16.0f) / 116.0f;}
         for (unsigned int i = 0; i < 3; i++)
         {
-            v8f true_val = exp256_ps(static_cast<__m256>(v8f(log256_ps(static_cast<__m256>(r[i])) * 1.0f / 3.0f)));
+            v8f true_val = exp256_ps(
+                    static_cast<__m256>(
+                        v8f(log256_ps(static_cast<__m256>(r[i]))) * 1.0f / 3.0f
+                        ));
             v8f false_val = (kappa * r[i] + 16.0f) / 116.0f;
             f[i] = if_select(r[i] > epsilon, true_val, false_val);
         }
@@ -857,7 +860,7 @@ namespace diffpng
         A = 500.0f * (f[0] - f[1]);
         B = 200.0f * (f[1] - f[2]);
     }
-    static void XYZToLABf(float x, float y, float z, float &L, float &A, float &B)
+    static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
     {
         const float epsilon = 216.0f / 24389.0f;
         const float kappa = 24389.0f / 27.0f;
@@ -989,10 +992,6 @@ namespace diffpng
                 AdobeRGBToXYZ(rs, gs, bs, ax, ay, az);
                 v8f l, aa, ab;
                 XYZToLAB(ax, ay, az, l, aa, ab);
-                for (int j = 0; j < border; ++j) {
-                    aA[i] = aa[j];
-                    aB[i] = ab[j];
-                }
 
                 if (border >= 8) {
                     rs = v8f{
@@ -1043,13 +1042,18 @@ namespace diffpng
                 v8f ba, bb;
                 XYZToLAB(bx, by, bz, l, ba, bb);
                 for (int j = 0; j < border; ++j) {
-                    bA[i] = ba[j];
-                    bB[i] = bb[j];
-                }
+                    aX[i+j] = ax[j];
+                    aY[i+j] = ay[j];
+                    bX[i+j] = bx[j];
+                    bY[i+j] = by[j];
 
-                for (auto j = i; j < border; ++j) {
-                    aLum[j] = aY[j] * args.Luminance;
-                    bLum[j] = bY[j] * args.Luminance;
+                    aA[i+j] = aa[j];
+                    aB[i+j] = ab[j];
+                    bA[i+j] = ba[j];
+                    bB[i+j] = bb[j];
+
+                    aLum[i+j] = aY[i+j] * args.Luminance;
+                    bLum[i+j] = bY[i+j] * args.Luminance;
                 }
             }
 #else
@@ -1545,7 +1549,7 @@ int main(int argc, char **argv)
     float yf = 0.2492;
     float zf = 0.1027;
     float lf, af, bf;
-    diffpng::XYZToLABf(xf, yf, zf, lf, af, bf);
+    diffpng::XYZToLAB(xf, yf, zf, lf, af, bf);
     std::cout << l << std::endl << a << std::endl << b << std::endl;
     std::cout << lf << '\t' << af << '\t' << bf << std::endl;
     for (int j = 0; j < 1; ++j) {
