@@ -20,7 +20,11 @@
 
 #define Pv8fas v8f const &a, float b
 
+#ifdef __linux__
 #define ALIGN __attribute__((aligned(32)))
+#elif _WIN32
+#define ALIGN __declspec(align(32))
+#endif
 
 #define OP operator
 
