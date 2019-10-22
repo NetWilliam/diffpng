@@ -69,9 +69,16 @@ class v8f {
 
         inline void storea(float *p) { _mm256_store_ps(p, v); }
 
+
+#ifdef __linux__
         inline void insert(int index, float value) { v[index] = value; }
 
         inline float OP[](int index) const { return v[index]; }
+#elif _WIN32
+        inline void insert(int index, float value) { v.m256_f32[index] = value; }
+
+        inline float OP[](int index) const { return v.m256_f32[index]; }
+#endif
 };
 
 // Constant creation via templates
@@ -212,7 +219,11 @@ STI std::ostream &OP << (std::ostream & output, const v8f &p)
 {
     output << "v8f: [";
     for (int i = 0; i < (8); ++i)
+#ifdef __linux__
         output << p.v[i] << ",";
+#elif _WIN32
+    output << p.v.m256_f32[i] << ",";
+#endif
     output << "]";
     return output;
 }
