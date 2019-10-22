@@ -6,7 +6,11 @@
  */
 
 #include <sstream>
+#ifdef __linux__
 #include <x86intrin.h> //AVX/SSE Extensions
+#elif _WIN32
+#include <intrin.h>
+#endif
 #ifndef V8F_H
 #define V8F_H
 
