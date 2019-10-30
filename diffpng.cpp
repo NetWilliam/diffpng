@@ -838,12 +838,6 @@ bool Yee_Compare_Engine(CompareArgs &args)
                     bs.insert(j, args.ImgA->Get_Blue(i + j));
                 }
             }
-// float r = powf(args.ImgA->Get_Red(i) / 255.0f, args.Gamma);
-// float g = powf(args.ImgA->Get_Green(i) / 255.0f, args.Gamma);
-// float b = powf(args.ImgA->Get_Blue(i) / 255.0f, args.Gamma);
-// rs = rs / 255.0f;
-// gs = gs / 255.0f;
-// bs = bs / 255.0f;
 #define powf256(base, exponatial)                                                                                      \
     exp256_ps(static_cast<__m256>(v8f(log256_ps(static_cast<__m256>(base)) * (exponatial))))
             // rs = exp256_ps(static_cast<__m256>(v8f(log256_ps(static_cast<__m256>(rs / 255.0f)) * args.Gamma)));
@@ -1374,7 +1368,7 @@ int main(int argc, char **argv)
     float yf = 0.2492;
     float zf = 0.1027;
     float lf, af, bf;
-    diffpng::XYZToLAB(xf, yf, zf, lf, af, bf);
+    diffpng::XYZToLABf(xf, yf, zf, lf, af, bf);
     std::cout << l << std::endl << a << std::endl << b << std::endl;
     std::cout << lf << '\t' << af << '\t' << bf << std::endl;
     for (int j = 0; j < 1; ++j) {
