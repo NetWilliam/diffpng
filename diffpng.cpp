@@ -813,19 +813,22 @@ bool Yee_Compare_Engine(CompareArgs &args)
             v8f rs, gs, bs;
             if (border >= 8) {
                 rs = v8f{
-                    args.ImgA->Get_Red(i),     args.ImgA->Get_Red(i + 1), args.ImgA->Get_Red(i + 2),
-                    args.ImgA->Get_Red(i + 3), args.ImgA->Get_Red(i + 4), args.ImgA->Get_Red(i + 5),
-                    args.ImgA->Get_Red(i + 6), args.ImgA->Get_Red(i + 7),
+                    static_cast<float>(args.ImgA->Get_Red(i)),     static_cast<float>(args.ImgA->Get_Red(i + 1)),
+                    static_cast<float>(args.ImgA->Get_Red(i + 2)), static_cast<float>(args.ImgA->Get_Red(i + 3)),
+                    static_cast<float>(args.ImgA->Get_Red(i + 4)), static_cast<float>(args.ImgA->Get_Red(i + 5)),
+                    static_cast<float>(args.ImgA->Get_Red(i + 6)), static_cast<float>(args.ImgA->Get_Red(i + 7)),
                 };
                 gs = v8f{
-                    args.ImgA->Get_Green(i),     args.ImgA->Get_Green(i + 1), args.ImgA->Get_Green(i + 2),
-                    args.ImgA->Get_Green(i + 3), args.ImgA->Get_Green(i + 4), args.ImgA->Get_Green(i + 5),
-                    args.ImgA->Get_Green(i + 6), args.ImgA->Get_Green(i + 7),
+                    static_cast<float>(args.ImgA->Get_Green(i)),     static_cast<float>(args.ImgA->Get_Green(i + 1)),
+                    static_cast<float>(args.ImgA->Get_Green(i + 2)), static_cast<float>(args.ImgA->Get_Green(i + 3)),
+                    static_cast<float>(args.ImgA->Get_Green(i + 4)), static_cast<float>(args.ImgA->Get_Green(i + 5)),
+                    static_cast<float>(args.ImgA->Get_Green(i + 6)), static_cast<float>(args.ImgA->Get_Green(i + 7)),
                 };
                 bs = v8f{
-                    args.ImgA->Get_Blue(i),     args.ImgA->Get_Blue(i + 1), args.ImgA->Get_Blue(i + 2),
-                    args.ImgA->Get_Blue(i + 3), args.ImgA->Get_Blue(i + 4), args.ImgA->Get_Blue(i + 5),
-                    args.ImgA->Get_Blue(i + 6), args.ImgA->Get_Blue(i + 7),
+                    static_cast<float>(args.ImgA->Get_Blue(i)),     static_cast<float>(args.ImgA->Get_Blue(i + 1)),
+                    static_cast<float>(args.ImgA->Get_Blue(i + 2)), static_cast<float>(args.ImgA->Get_Blue(i + 3)),
+                    static_cast<float>(args.ImgA->Get_Blue(i + 4)), static_cast<float>(args.ImgA->Get_Blue(i + 5)),
+                    static_cast<float>(args.ImgA->Get_Blue(i + 6)), static_cast<float>(args.ImgA->Get_Blue(i + 7)),
                 };
             }
             else {
@@ -857,19 +860,22 @@ bool Yee_Compare_Engine(CompareArgs &args)
 
             if (border >= 8) {
                 rs = v8f{
-                    args.ImgB->Get_Red(i),     args.ImgB->Get_Red(i + 1), args.ImgB->Get_Red(i + 2),
-                    args.ImgB->Get_Red(i + 3), args.ImgB->Get_Red(i + 4), args.ImgB->Get_Red(i + 5),
-                    args.ImgB->Get_Red(i + 6), args.ImgB->Get_Red(i + 7),
+                    static_cast<float>(args.ImgB->Get_Red(i)),     static_cast<float>(args.ImgB->Get_Red(i + 1)),
+                    static_cast<float>(args.ImgB->Get_Red(i + 2)), static_cast<float>(args.ImgB->Get_Red(i + 3)),
+                    static_cast<float>(args.ImgB->Get_Red(i + 4)), static_cast<float>(args.ImgB->Get_Red(i + 5)),
+                    static_cast<float>(args.ImgB->Get_Red(i + 6)), static_cast<float>(args.ImgB->Get_Red(i + 7)),
                 };
                 gs = v8f{
-                    args.ImgB->Get_Green(i),     args.ImgB->Get_Green(i + 1), args.ImgB->Get_Green(i + 2),
-                    args.ImgB->Get_Green(i + 3), args.ImgB->Get_Green(i + 4), args.ImgB->Get_Green(i + 5),
-                    args.ImgB->Get_Green(i + 6), args.ImgB->Get_Green(i + 7),
+                    static_cast<float>(args.ImgB->Get_Green(i)),     static_cast<float>(args.ImgB->Get_Green(i + 1)),
+                    static_cast<float>(args.ImgB->Get_Green(i + 2)), static_cast<float>(args.ImgB->Get_Green(i + 3)),
+                    static_cast<float>(args.ImgB->Get_Green(i + 4)), static_cast<float>(args.ImgB->Get_Green(i + 5)),
+                    static_cast<float>(args.ImgB->Get_Green(i + 6)), static_cast<float>(args.ImgB->Get_Green(i + 7)),
                 };
                 bs = v8f{
-                    args.ImgB->Get_Blue(i),     args.ImgB->Get_Blue(i + 1), args.ImgB->Get_Blue(i + 2),
-                    args.ImgB->Get_Blue(i + 3), args.ImgB->Get_Blue(i + 4), args.ImgB->Get_Blue(i + 5),
-                    args.ImgB->Get_Blue(i + 6), args.ImgB->Get_Blue(i + 7),
+                    static_cast<float>(args.ImgB->Get_Blue(i)),     static_cast<float>(args.ImgB->Get_Blue(i + 1)),
+                    static_cast<float>(args.ImgB->Get_Blue(i + 2)), static_cast<float>(args.ImgB->Get_Blue(i + 3)),
+                    static_cast<float>(args.ImgB->Get_Blue(i + 4)), static_cast<float>(args.ImgB->Get_Blue(i + 5)),
+                    static_cast<float>(args.ImgB->Get_Blue(i + 6)), static_cast<float>(args.ImgB->Get_Blue(i + 7)),
                 };
             }
             else {
