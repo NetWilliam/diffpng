@@ -899,13 +899,18 @@ bool Yee_Compare_Engine(CompareArgs &args)
             v8f ba, bb;
             XYZToLAB(bx, by, bz, l, ba, bb);
             for (int j = 0; j < border; ++j) {
-                bA[i] = ba[j];
-                bB[i] = bb[j];
-            }
+                aX[i + j] = ax[j];
+                aY[i + j] = ay[j];
+                bX[i + j] = bx[j];
+                bY[i + j] = by[j];
 
-            for (auto j = i; j < border; ++j) {
-                aLum[j] = aY[j] * args.Luminance;
-                bLum[j] = bY[j] * args.Luminance;
+                aA[i + j] = aa[j];
+                aB[i + j] = ab[j];
+                bA[i + j] = ba[j];
+                bB[i + j] = bb[j];
+
+                aLum[i + j] = aY[i + j] * args.Luminance;
+                bLum[i + j] = bY[i + j] * args.Luminance;
             }
         }
 #else
