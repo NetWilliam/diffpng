@@ -835,7 +835,7 @@ bool Yee_Compare_Engine(CompareArgs &args)
                 rs = 11;
                 gs = 12;
                 bs = 12; // some random magic nums to make sure no exception throw out
-                for (int j = 0; j < border; ++j) {
+                for (unsigned j = 0; j < border; ++j) {
                     rs.insert(j, args.ImgA->Get_Red(i + j));
                     gs.insert(j, args.ImgA->Get_Green(i + j));
                     bs.insert(j, args.ImgA->Get_Blue(i + j));
@@ -853,7 +853,7 @@ bool Yee_Compare_Engine(CompareArgs &args)
             AdobeRGBToXYZ(rs, gs, bs, ax, ay, az);
             v8f l, aa, ab;
             XYZToLAB(ax, ay, az, l, aa, ab);
-            for (int j = 0; j < border; ++j) {
+            for (unsigned j = 0; j < border; ++j) {
                 aA[i] = aa[j];
                 aB[i] = ab[j];
             }
@@ -882,7 +882,7 @@ bool Yee_Compare_Engine(CompareArgs &args)
                 rs = 11;
                 gs = 12;
                 bs = 12; // some random magic nums to make sure no exception throw out
-                for (int j = 0; j < border; ++j) {
+                for (unsigned j = 0; j < border; ++j) {
                     rs.insert(j, args.ImgB->Get_Red(i + j));
                     gs.insert(j, args.ImgB->Get_Green(i + j));
                     bs.insert(j, args.ImgB->Get_Blue(i + j));
@@ -898,7 +898,7 @@ bool Yee_Compare_Engine(CompareArgs &args)
             AdobeRGBToXYZ(rs, gs, bs, bx, by, bz);
             v8f ba, bb;
             XYZToLAB(bx, by, bz, l, ba, bb);
-            for (int j = 0; j < border; ++j) {
+            for (unsigned j = 0; j < border; ++j) {
                 aX[i + j] = ax[j];
                 aY[i + j] = ay[j];
                 bX[i + j] = bx[j];
